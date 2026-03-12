@@ -1,20 +1,26 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
 }
 
 const variants = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300',
-  secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200 disabled:bg-gray-50',
-  danger: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300',
-  ghost: 'bg-transparent text-blue-600 hover:bg-blue-50',
+  primary:
+    'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-200 hover:from-indigo-700 hover:to-violet-700 hover:shadow-indigo-300 disabled:from-indigo-300 disabled:to-violet-300 disabled:shadow-none',
+  secondary:
+    'bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50',
+  danger:
+    'bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-md shadow-red-100 hover:from-red-600 hover:to-rose-600 disabled:opacity-50',
+  ghost:
+    'bg-transparent text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700',
+  outline:
+    'bg-transparent border border-indigo-500 text-indigo-600 hover:bg-indigo-50',
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  sm: 'px-3.5 py-1.5 text-xs font-semibold',
+  md: 'px-4.5 py-2 text-sm font-semibold',
+  lg: 'px-6 py-2.5 text-sm font-semibold',
 };
 
 export default function Button({
@@ -28,7 +34,7 @@ export default function Button({
     <button
       {...props}
       disabled={loading || props.disabled}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${props.className ?? ''}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-xl font-medium tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 active:scale-[0.97] disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${props.className ?? ''}`}
     >
       {loading && (
         <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
