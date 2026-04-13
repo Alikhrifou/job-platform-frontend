@@ -25,6 +25,10 @@ import CompanyApplicationsPage from './pages/company/CompanyApplicationsPage'
 
 // Admin
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminUsersPage from './pages/admin/AdminUsersPage'
+import AdminJobsPage from './pages/admin/AdminJobsPage'
+import AdminApplicationsPage from './pages/admin/AdminApplicationsPage'
+import AdminSkillsPage from './pages/admin/AdminSkillsPage'
 
 function App() {
   return (
@@ -51,12 +55,17 @@ function App() {
           <Route path="/company/jobs" element={<CompanyJobsPage />} />
           <Route path="/company/jobs/new" element={<JobFormPage />} />
           <Route path="/company/jobs/:jobId/edit" element={<JobFormPage />} />
+          <Route path="/company/applications" element={<CompanyApplicationsPage />} />
           <Route path="/company/applications/:jobId" element={<CompanyApplicationsPage />} />
         </Route>
 
         {/* Admin */}
         <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/jobs" element={<AdminJobsPage />} />
+          <Route path="/admin/applications" element={<AdminApplicationsPage />} />
+          <Route path="/admin/skills" element={<AdminSkillsPage />} />
         </Route>
 
         {/* Fallback */}
