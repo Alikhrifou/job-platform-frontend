@@ -15,12 +15,17 @@ api.interceptors.request.use((config) => {
 });
 
 // Handle 401 globally — clear token and redirect to login
+// Skip redirect for auth endpoints so login/register errors display properly
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      const url = error.config?.url || '';
+      const isAuthRequest = url.includes('/api/auth/');
+      if (!isAuthRequest) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

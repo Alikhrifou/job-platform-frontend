@@ -38,7 +38,7 @@ const cards = [
   {
     title: 'Applications',
     description: 'Review candidates and their match scores',
-    to: '/company/jobs',
+    to: '/company/applications',
     gradient: 'from-emerald-500 to-teal-500',
     icon: (
       <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

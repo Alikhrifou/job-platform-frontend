@@ -34,7 +34,14 @@ export default function StudentProfilePage() {
       setSkills(skillsRes.data);
       if (profileRes) {
         setProfile(profileRes.data);
-        reset({ university: profileRes.data.university, major: profileRes.data.major, bio: profileRes.data.bio, gpa: profileRes.data.gpa });
+        reset({
+          university: profileRes.data.university,
+          major: profileRes.data.major,
+          bio: profileRes.data.bio,
+          gpa: profileRes.data.gpa,
+          portfolioUrl: profileRes.data.portfolioUrl,
+          resumeUrl: profileRes.data.resumeUrl,
+        });
         const map: Record<number, number> = {};
         skillsRes.data.forEach((s) => {
           if (profileRes.data.skills[s.name] !== undefined) map[s.id] = profileRes.data.skills[s.name];
@@ -58,7 +65,6 @@ export default function StudentProfilePage() {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
-
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">My Profile</h1>

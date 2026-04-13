@@ -1,0 +1,127 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../../api/axios';
+import type { Skill } from '../../types';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
+
+interface SkillForm { name: string; category: string; description: string }
+const empty: SkillForm = { name: '', category: '', description: '' };
+
+export default function AdminSkillsPage() {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm] = useState<SkillForm>(empty);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Skill | null>(null);
+
+  const load = () => {
+    setLoading(true);
+    api.get<Skill[]>('/api/skills')
+      .then((r) => setSkills(r.data))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(load, []);
+
+  const handleSave = async () => {
+    if (!form.name.trim() || !form.category.trim()) return;
+    if (editId) {
+      const { data } = await api.put<Skill>(`/api/admin/skills/${editId}`, form);
+      setSkills((prev) => prev.map((s) => (s.id === data.id ? data : s)));
+    } else {
+      const { data } = await api.post<Skill>('/api/admin/skills', form);
+      setSkills((prev) => [...prev, data]);
+    }
+    setForm(empty);
+    setEditId(null);
+  };
+
+  const startEdit = (s: Skill) => {
+    setEditId(s.id);
+    setForm({ name: s.name, category: s.category, description: s.description ?? '' });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    await api.delete(`/api/admin/skills/${deleteTarget.id}`);
+    setSkills((prev) => prev.filter((s) => s.id !== deleteTarget.id));
+    setDeleteTarget(null);
+  };
+
+  return (
+    <div>
+      <div className="mb-6">
+        <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
+        <h1 className="mt-1 text-2xl font-bold text-gray-900">Manage Skills</h1>
+      </div>
+
+      {/* Add / Edit form */}
+      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 className="mb-3 font-semibold text-gray-800">{editId ? 'Edit Skill' : 'Add Skill'}</h2>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="React" />
+          <Input label="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Frontend" />
+          <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optional" />
+        </div>
+        <div className="mt-4 flex gap-2">
+          <Button size="sm" onClick={handleSave}>{editId ? 'Update' : 'Create'}</Button>
+          {editId && <Button size="sm" variant="ghost" onClick={() => { setForm(empty); setEditId(null); }}>Cancel</Button>}
+        </div>
+      </div>
+
+      {/* Table */}
+      {loading ? (
+        <p className="text-sm text-gray-500">Loading…</p>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
+              <tr>
+                <th className="px-4 py-3">ID</th>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Description</th>
+                <th className="px-4 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {skills.map((s) => (
+                <tr key={s.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 font-mono text-xs text-gray-400">{s.id}</td>
+                  <td className="px-4 py-3 font-medium text-gray-800">{s.name}</td>
+                  <td className="px-4 py-3">
+                    <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">{s.category}</span>
+                  </td>
+                  <td className="px-4 py-3 text-gray-600">{s.description ?? '—'}</td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="ghost" onClick={() => startEdit(s)}>Edit</Button>
+                      <Button size="sm" variant="danger" onClick={() => setDeleteTarget(s)}>Delete</Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Delete confirmation modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900">Delete Skill</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Are you sure you want to delete <strong>{deleteTarget.name}</strong>? This may affect students and jobs using this skill.
+            </p>
+            <div className="mt-5 flex justify-end gap-3">
+              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+              <Button variant="danger" onClick={confirmDelete}>Delete</Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

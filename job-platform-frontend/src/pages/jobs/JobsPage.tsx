@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 import type { JobOfferResponse } from '../../types';
@@ -23,16 +23,28 @@ export default function JobsPage() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api.get<JobOfferResponse[]>('/api/jobs')
+  const fetchJobs = useCallback((query: string) => {
+    setLoading(true);
+    const url = query.trim()
+      ? `/api/jobs/search?title=${encodeURIComponent(query.trim())}`
+      : '/api/jobs';
+    api.get<JobOfferResponse[]>(url)
       .then((r) => setJobs(r.data))
       .finally(() => setLoading(false));
   }, []);
 
-  const filtered = jobs.filter((j) =>
-    j.title.toLowerCase().includes(search.toLowerCase()) ||
-    j.companyName.toLowerCase().includes(search.toLowerCase())
-  );
+  // Initial load
+  useEffect(() => {
+    fetchJobs('');
+  }, [fetchJobs]);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => fetchJobs(search), 400);
+    return () => clearTimeout(timer);
+  }, [search, fetchJobs]);
+
+  const filtered = jobs;
 
   return (
     <div>

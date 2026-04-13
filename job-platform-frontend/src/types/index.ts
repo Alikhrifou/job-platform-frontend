@@ -1,6 +1,18 @@
 // ─── Auth ────────────────────────────────────────────────────────────────────
 export type Role = 'STUDENT' | 'COMPANY' | 'ADMIN';
 
+export interface UserResponse {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  role: Role;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 export interface RegisterRequest {
   email: string;
   password: string;
@@ -140,8 +152,17 @@ export interface ApplicationResponse {
   companyName: string;
   studentId: number;
   studentName: string;
+  studentEmail?: string;
+  studentUniversity?: string;
+  studentMajor?: string;
+  studentGpa?: number;
+  studentBio?: string;
+  studentPortfolioUrl?: string;
+  studentResumeUrl?: string;
   status: ApplicationStatus;
   coverLetter?: string;
   matchScore?: number;
   appliedAt: string;
+  reviewedAt?: string;
+  reviewNotes?: string;
 }

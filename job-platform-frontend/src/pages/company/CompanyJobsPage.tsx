@@ -4,9 +4,28 @@ import api from '../../api/axios';
 import Button from '../../components/ui/Button';
 import type { JobOfferResponse } from '../../types';
 
+function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
+  open: boolean; title: string; message: string; onConfirm: () => void; onCancel: () => void;
+}) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onCancel}>
+      <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <p className="mt-2 text-sm text-gray-600">{message}</p>
+        <div className="mt-6 flex justify-end gap-3">
+          <Button variant="secondary" size="sm" onClick={onCancel}>Cancel</Button>
+          <Button variant="danger" size="sm" onClick={onConfirm}>Delete</Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CompanyJobsPage() {
   const [jobs, setJobs] = useState<JobOfferResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
 
   const load = () => {
     api.get<JobOfferResponse[]>('/api/jobs')
@@ -16,9 +35,10 @@ export default function CompanyJobsPage() {
 
   useEffect(load, []);
 
-  const deleteJob = async (id: number) => {
-    if (!confirm('Delete this job?')) return;
-    await api.delete(`/api/jobs/${id}`);
+  const confirmDelete = async () => {
+    if (deleteTarget === null) return;
+    await api.delete(`/api/jobs/${deleteTarget}`);
+    setDeleteTarget(null);
     load();
   };
 
@@ -26,6 +46,14 @@ export default function CompanyJobsPage() {
 
   return (
     <div>
+      <ConfirmModal
+        open={deleteTarget !== null}
+        title="Delete Job"
+        message="Are you sure you want to delete this job? All associated applications will also be removed. This action cannot be undone."
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">My Job Offers</h1>
         <Link to="/company/jobs/new"><Button>+ Post Job</Button></Link>
@@ -52,7 +80,7 @@ export default function CompanyJobsPage() {
               <div className="flex items-center gap-2">
                 <Link to={`/company/applications/${job.id}`}><Button size="sm" variant="secondary">Applications</Button></Link>
                 <Link to={`/company/jobs/${job.id}/edit`}><Button size="sm" variant="secondary">Edit</Button></Link>
-                <Button size="sm" variant="danger" onClick={() => deleteJob(job.id)}>Delete</Button>
+                <Button size="sm" variant="danger" onClick={() => setDeleteTarget(job.id)}>Delete</Button>
               </div>
             </div>
           ))}
