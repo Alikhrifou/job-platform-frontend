@@ -1,0 +1,13 @@
+# Don't send these to Docker — they're rebuilt inside the container
+node_modules/
+dist/
+.git/
+.gitignore
+.idea/
+.vscode/
+*.log
+
+# These are local config files
+.env
+.env.*
+README.md
