@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { logout } from '../../features/auth/authSlice';
 import { useTheme } from '../../hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import Button from '../ui/Button';
 
 export default function Navbar() {
@@ -10,6 +11,11 @@ export default function Navbar() {
   const location = useLocation();
   const { isAuthenticated, role, email } = useAppSelector((s) => s.auth);
   const { theme, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === 'fr' ? 'en' : 'fr');
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -57,12 +63,21 @@ export default function Navbar() {
 
         {/* Nav Links */}
         <div className="hidden items-center gap-6 md:flex">
-          {navLink('/jobs', 'Jobs')}
-          {isAuthenticated && navLink(dashboardPath, 'Dashboard')}
+          {navLink('/jobs', t('nav.jobs'))}
+          {isAuthenticated && navLink(dashboardPath, t('nav.dashboard'))}
         </div>
 
         {/* Right side */}
         <div className="flex items-center gap-3">
+          {/* Language toggle */}
+          <button
+            onClick={toggleLanguage}
+            className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            aria-label="Toggle language"
+          >
+            {i18n.language === 'fr' ? 'EN' : 'FR'}
+          </button>
+
           {/* Dark mode toggle */}
           <button
             onClick={toggleTheme}
@@ -91,16 +106,16 @@ export default function Navbar() {
                 </span>
               </div>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
-                Sign out
+                {t('nav.signOut')}
               </Button>
             </>
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost" size="sm">Sign in</Button>
+                <Button variant="ghost" size="sm">{t('nav.signIn')}</Button>
               </Link>
               <Link to="/register">
-                <Button size="sm">Get started</Button>
+                <Button size="sm">{t('nav.getStarted')}</Button>
               </Link>
             </>
           )}

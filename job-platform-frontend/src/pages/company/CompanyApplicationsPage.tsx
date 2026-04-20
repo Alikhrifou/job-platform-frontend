@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import type { ApplicationResponse, ApplicationStatus } from '../../types';
 import Button from '../../components/ui/Button';
@@ -24,6 +25,7 @@ export default function CompanyApplicationsPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<ApplicationResponse | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const url = jobId ? `/api/applications/job/${jobId}` : '/api/applications/company';
@@ -53,11 +55,11 @@ export default function CompanyApplicationsPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <Link to="/company/jobs" className="text-sm text-indigo-600 hover:underline">&larr; My Jobs</Link>
+        <Link to="/company/jobs" className="text-sm text-indigo-600 hover:underline">&larr; {t('company.myJobs')}</Link>
         <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
-          {jobId ? 'Job Applications' : 'All Applications'}
+          {jobId ? t('company.jobApplications') : t('company.allApplications')}
         </h1>
-        <p className="text-sm text-gray-500 dark:text-slate-400">{apps.length} total application{apps.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">{apps.length} {t('company.totalApplications')}</p>
       </div>
 
       {/* Stats row */}
@@ -67,7 +69,7 @@ export default function CompanyApplicationsPage() {
             onClick={() => setStatusFilter('ALL')}
             className={`rounded-full px-3 py-1 text-xs font-medium transition ${statusFilter === 'ALL' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:bg-slate-700'}`}
           >
-            All ({apps.length})
+            {t('common.all')} ({apps.length})
           </button>
           {STATUS_OPTIONS.filter((s) => counts[s]).map((s) => (
             <button
@@ -84,7 +86,7 @@ export default function CompanyApplicationsPage() {
       {apps.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 dark:border-slate-600 py-16 text-center text-gray-400 dark:text-slate-500">
           <p className="text-4xl">📭</p>
-          <p className="mt-2">No applications yet.</p>
+          <p className="mt-2">{t('company.noApplications')}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -101,7 +103,7 @@ export default function CompanyApplicationsPage() {
                   </div>
                   {app.studentEmail && <p className="text-sm text-gray-500 dark:text-slate-400">{app.studentEmail}</p>}
                   <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
-                    Applied {new Date(app.appliedAt).toLocaleDateString()}
+                    {t('student.applied')} {new Date(app.appliedAt).toLocaleDateString()}
                     {!jobId && <> &middot; <span className="font-medium text-gray-600 dark:text-slate-300">{app.jobTitle}</span></>}
                   </p>
                   {app.studentUniversity && (
@@ -119,49 +121,49 @@ export default function CompanyApplicationsPage() {
                       <span className={`text-lg font-bold ${app.matchScore >= 70 ? 'text-green-600' : app.matchScore >= 40 ? 'text-yellow-600' : 'text-red-500'}`}>
                         {app.matchScore.toFixed(0)}%
                       </span>
-                      <p className="text-[10px] text-gray-400 dark:text-slate-500">Match</p>
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500">{t('student.match')}</p>
                     </div>
                   )}
                   <div className="flex gap-1.5 flex-wrap justify-end">
                     <Button size="sm" variant="secondary" onClick={() => setSelected(app)}>
-                      View Profile
+                      {t('company.viewProfile')}
                     </Button>
                     {app.studentEmail && (
                       <a href={`mailto:${app.studentEmail}`}>
-                        <Button size="sm" variant="outline">Contact</Button>
+                        <Button size="sm" variant="outline">{t('company.contact')}</Button>
                       </a>
                     )}
                   </div>
                   {app.status === 'PENDING' && (
                     <div className="flex gap-1.5 mt-1">
                       <Button size="sm" variant="ghost" onClick={() => updateStatus(app.id, 'SHORTLISTED')}>
-                        Shortlist
+                        {t('company.shortlist')}
                       </Button>
                       <Button size="sm" variant="primary" onClick={() => updateStatus(app.id, 'ACCEPTED')}>
-                        Accept
+                        {t('company.accept')}
                       </Button>
                       <Button size="sm" variant="danger" onClick={() => updateStatus(app.id, 'REJECTED')}>
-                        Reject
+                        {t('company.reject')}
                       </Button>
                     </div>
                   )}
                   {app.status === 'SHORTLISTED' && (
                     <div className="flex gap-1.5 mt-1">
                       <Button size="sm" variant="primary" onClick={() => updateStatus(app.id, 'INTERVIEW_SCHEDULED')}>
-                        Schedule Interview
+                        {t('company.scheduleInterview')}
                       </Button>
                       <Button size="sm" variant="danger" onClick={() => updateStatus(app.id, 'REJECTED')}>
-                        Reject
+                        {t('company.reject')}
                       </Button>
                     </div>
                   )}
                   {app.status === 'INTERVIEW_SCHEDULED' && (
                     <div className="flex gap-1.5 mt-1">
                       <Button size="sm" variant="primary" onClick={() => updateStatus(app.id, 'OFFER_EXTENDED')}>
-                        Extend Offer
+                        {t('company.extendOffer')}
                       </Button>
                       <Button size="sm" variant="danger" onClick={() => updateStatus(app.id, 'REJECTED')}>
-                        Reject
+                        {t('company.reject')}
                       </Button>
                     </div>
                   )}
@@ -188,7 +190,7 @@ export default function CompanyApplicationsPage() {
         <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={() => setSelected(null)}>
           <div className="h-full w-full max-w-md overflow-y-auto bg-white dark:bg-slate-900 p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Student Profile</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('company.studentProfile')}</h2>
               <button onClick={() => setSelected(null)} className="rounded-lg p-1 hover:bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
@@ -204,19 +206,19 @@ export default function CompanyApplicationsPage() {
 
             {/* Academic info */}
             <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Academic Info</h4>
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('student.academicInfo')}</h4>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 {selected.studentUniversity && (
-                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">University</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentUniversity}</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.university')}</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentUniversity}</p></div>
                 )}
                 {selected.studentMajor && (
-                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">Major</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentMajor}</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.major')}</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentMajor}</p></div>
                 )}
                 {selected.studentGpa !== undefined && selected.studentGpa > 0 && (
-                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">GPA</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentGpa}</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.gpa')}</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentGpa}</p></div>
                 )}
                 {selected.matchScore !== undefined && selected.matchScore > 0 && (
-                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">Match Score</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.matchScore')}</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
                 )}
               </div>
             </section>
@@ -224,7 +226,7 @@ export default function CompanyApplicationsPage() {
             {/* Bio */}
             {selected.studentBio && (
               <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">About</h4>
+                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.about')}</h4>
                 <p className="text-sm text-gray-700 dark:text-slate-200 leading-relaxed">{selected.studentBio}</p>
               </section>
             )}
@@ -232,11 +234,11 @@ export default function CompanyApplicationsPage() {
             {/* Links & Resume */}
             {(selected.studentPortfolioUrl || selected.studentResumeUrl) && (
               <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Links & Documents</h4>
+                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.linksAndDocs')}</h4>
                 <div className="flex flex-col gap-2">
                   {selected.studentPortfolioUrl && (
                     <a href={selected.studentPortfolioUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:underline break-all">
-                      🌐 Portfolio
+                      🌐 {t('student.portfolio')}
                     </a>
                   )}
                   {selected.studentResumeUrl && (
@@ -254,7 +256,7 @@ export default function CompanyApplicationsPage() {
                       }}
                       className="inline-flex items-center gap-1.5 text-sm text-indigo-600 dark:text-indigo-400 hover:underline text-left"
                     >
-                      📄 View Resume {selected.studentResumeOriginalName ? `(${selected.studentResumeOriginalName})` : selected.studentResumeUrl.endsWith('.pdf') ? '(PDF)' : '(DOCX)'}
+                      📄 {t('company.viewResume')} {selected.studentResumeOriginalName ? `(${selected.studentResumeOriginalName})` : selected.studentResumeUrl.endsWith('.pdf') ? '(PDF)' : '(DOCX)'}
                     </button>
                   )}
                 </div>
@@ -264,14 +266,14 @@ export default function CompanyApplicationsPage() {
             {/* Cover letter */}
             {selected.coverLetter && (
               <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Cover Letter</h4>
+                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.coverLetter')}</h4>
                 <p className="text-sm text-gray-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">{selected.coverLetter}</p>
               </section>
             )}
 
             {/* Application status */}
             <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Application for {selected.jobTitle}</h4>
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.applicationFor')} {selected.jobTitle}</h4>
               <div className="flex items-center gap-3">
                 <span className={`rounded-full px-3 py-0.5 text-xs font-medium ${STATUS_STYLES[selected.status]}`}>
                   {selected.status.replace(/_/g, ' ')}
@@ -293,14 +295,14 @@ export default function CompanyApplicationsPage() {
               {selected.studentEmail && (
                 <a href={`mailto:${selected.studentEmail}`} className="flex-1">
                   <Button className="w-full" variant="primary">
-                    ✉ Contact Student
+                    ✉ {t('company.contactStudent')}
                   </Button>
                 </a>
               )}
               {selected.status === 'PENDING' && (
                 <>
-                  <Button variant="primary" onClick={() => updateStatus(selected.id, 'ACCEPTED')}>Accept</Button>
-                  <Button variant="danger" onClick={() => updateStatus(selected.id, 'REJECTED')}>Reject</Button>
+                  <Button variant="primary" onClick={() => updateStatus(selected.id, 'ACCEPTED')}>{t('company.accept')}</Button>
+                  <Button variant="danger" onClick={() => updateStatus(selected.id, 'REJECTED')}>{t('company.reject')}</Button>
                 </>
               )}
             </div>

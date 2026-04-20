@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
@@ -16,7 +17,8 @@ const schema = yup.object({
 });
 
 export default function StudentProfilePage() {
-  const [profile, setProfile] = useState<StudentProfileResponse | null>(null);
+  const { t } = useTranslation();
+  const [, setProfile] = useState<StudentProfileResponse | null>(null);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<Record<number, number>>({});
   const [saved, setSaved] = useState(false);
@@ -128,32 +130,32 @@ export default function StudentProfilePage() {
   };
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">My Profile</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">{t('student.myProfile')}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {/* Basic info */}
         <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Academic Info</h2>
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">{t('student.academicInfo')}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input label="University" placeholder="MIT" error={errors.university?.message} {...register('university')} />
-            <Input label="Major" placeholder="Computer Science" error={errors.major?.message} {...register('major')} />
-            <Input label="GPA" type="number" step="0.01" placeholder="3.8" error={errors.gpa?.message} {...register('gpa')} />
+            <Input label={t('student.university')} placeholder="MIT" error={errors.university?.message} {...register('university')} />
+            <Input label={t('student.major')} placeholder="Computer Science" error={errors.major?.message} {...register('major')} />
+            <Input label={t('student.gpa')} type="number" step="0.01" placeholder="3.8" error={errors.gpa?.message} {...register('gpa')} />
           </div>
         </section>
 
         {/* Bio & links */}
         <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">About & Links</h2>
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">{t('student.aboutAndLinks')}</h2>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700 dark:text-slate-200">Bio</label>
-              <textarea {...register('bio')} rows={3} placeholder="Tell companies about yourself..." className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('student.bio')}</label>
+              <textarea {...register('bio')} rows={3} placeholder={t('student.bioPlaceholder')} className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
-            <Input label="Portfolio URL" placeholder="https://myportfolio.com" error={errors.portfolioUrl?.message} {...register('portfolioUrl')} />
+            <Input label={t('student.portfolioUrl')} placeholder="https://myportfolio.com" error={errors.portfolioUrl?.message} {...register('portfolioUrl')} />
 
             {/* Resume Upload */}
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-slate-200">Resume (PDF or DOCX, max 5MB)</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('student.resumeLabel')}</label>
               {resumeFile ? (
                 <div className="flex items-center gap-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-800 px-4 py-3">
                   <svg className="h-8 w-8 shrink-0 text-red-500" fill="currentColor" viewBox="0 0 24 24">
@@ -161,13 +163,13 @@ export default function StudentProfilePage() {
                   </svg>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-gray-800 dark:text-slate-100">{resumeName || 'Resume'}</p>
-                    <p className="text-xs text-gray-500 dark:text-slate-400">Uploaded</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400">{t('student.uploaded')}</p>
                   </div>
                   <button type="button" onClick={openResume} className="rounded-lg px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-slate-700 transition">
-                    View
+                    {t('common.view')}
                   </button>
                   <button type="button" onClick={handleResumeDelete} className="rounded-lg px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700 transition">
-                    Delete
+                    {t('common.delete')}
                   </button>
                 </div>
               ) : (
@@ -176,9 +178,9 @@ export default function StudentProfilePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-8m0 0l-3 3m3-3l3 3M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
                   </svg>
                   <span className="text-sm text-gray-600 dark:text-slate-300">
-                    {uploading ? 'Uploading...' : 'Click to upload your resume'}
+                    {uploading ? t('student.uploading') : t('student.clickToUpload')}
                   </span>
-                  <span className="text-xs text-gray-400 dark:text-slate-500">PDF or DOCX up to 5MB</span>
+                  <span className="text-xs text-gray-400 dark:text-slate-500">{t('student.resumeHint')}</span>
                   <input ref={fileInputRef} type="file" accept=".pdf,.doc,.docx" className="hidden" onChange={handleResumeUpload} disabled={uploading} />
                 </label>
               )}
@@ -189,7 +191,7 @@ export default function StudentProfilePage() {
 
         {/* Skills */}
         <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Skills</h2>
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">{t('student.skills')}</h2>
           <div className="flex flex-wrap gap-2">
             {skills.map((s) => {
               const selected = selectedSkills[s.id] !== undefined;
@@ -204,7 +206,7 @@ export default function StudentProfilePage() {
 
           {Object.keys(selectedSkills).length > 0 && (
             <div className="mt-4 flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Set proficiency (1–5):</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('student.setProficiency')}</p>
               {skills.filter((s) => selectedSkills[s.id] !== undefined).map((s) => (
                 <div key={s.id} className="flex items-center justify-between">
                   <span className="text-sm text-gray-700 dark:text-slate-200">{s.name}</span>
@@ -223,8 +225,8 @@ export default function StudentProfilePage() {
         </section>
 
         <div className="flex items-center gap-3">
-          <Button type="submit" loading={isSubmitting} size="lg">Save Profile</Button>
-          {saved && <span className="text-sm text-green-600">✓ Saved successfully</span>}
+          <Button type="submit" loading={isSubmitting} size="lg">{t('student.saveProfile')}</Button>
+          {saved && <span className="text-sm text-green-600">✓ {t('student.savedSuccessfully')}</span>}
         </div>
       </form>
     </div>

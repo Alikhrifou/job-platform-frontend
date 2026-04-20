@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
@@ -24,6 +25,7 @@ export default function JobFormPage() {
   const { jobId } = useParams();
   const navigate = useNavigate();
   const isEdit = !!jobId;
+  const { t } = useTranslation();
 
   const [skills, setSkills] = useState<Skill[]>([]);
   const [requiredSkills, setRequiredSkills] = useState<Record<number, number>>({});
@@ -70,38 +72,38 @@ export default function JobFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">{isEdit ? 'Edit Job' : 'Post a Job'}</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">{isEdit ? t('company.editJob') : t('company.postJob')}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Job Details</h2>
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">{t('company.jobDetails')}</h2>
           <div className="flex flex-col gap-4">
-            <Input label="Job Title" placeholder="Frontend Developer" error={errors.title?.message} {...register('title')} />
+            <Input label={t('company.jobTitle')} placeholder="Frontend Developer" error={errors.title?.message} {...register('title')} />
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input label="Location" placeholder="Paris, France" error={errors.location?.message} {...register('location')} />
+              <Input label={t('company.locationLabel')} placeholder="Paris, France" error={errors.location?.message} {...register('location')} />
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-slate-200">Job Type</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('company.jobType')}</label>
                 <select {...register('jobType')} className="rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">Select type</option>
+                  <option value="">{t('company.selectType')}</option>
                   {JOB_TYPES.map((t) => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
                 </select>
               </div>
-              <Input label="Salary (€)" type="number" placeholder="45000" error={errors.salary?.message} {...register('salary')} />
-              <Input label="Salary Range" placeholder="40k–50k €" {...register('salaryRange')} />
+              <Input label={t('company.salary')} type="number" placeholder="45000" error={errors.salary?.message} {...register('salary')} />
+              <Input label={t('company.salaryRange')} placeholder="40k–50k €" {...register('salaryRange')} />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700 dark:text-slate-200">Description</label>
-              <textarea {...register('description')} rows={5} placeholder="Describe the role, responsibilities, requirements..." className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('company.description')}</label>
+              <textarea {...register('description')} rows={5} placeholder={t('company.jobDescPlaceholder')} className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-200">
               <input type="checkbox" {...register('isActive')} className="accent-blue-600" />
-              Publish immediately (active)
+              {t('company.publishImmediately')}
             </label>
           </div>
         </section>
 
         <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Required Skills</h2>
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">{t('company.requiredSkills')}</h2>
           <div className="flex flex-wrap gap-2">
             {skills.map((s) => {
               const selected = requiredSkills[s.id] !== undefined;
@@ -116,7 +118,7 @@ export default function JobFormPage() {
 
           {Object.keys(requiredSkills).length > 0 && (
             <div className="mt-4 flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700 dark:text-slate-200">Required level (1–5):</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('company.requiredLevel')}</p>
               {skills.filter((s) => requiredSkills[s.id] !== undefined).map((s) => (
                 <div key={s.id} className="flex items-center justify-between">
                   <span className="text-sm text-gray-700 dark:text-slate-200">{s.name}</span>
@@ -137,8 +139,8 @@ export default function JobFormPage() {
         {serverError && <p className="rounded-lg bg-red-50 dark:bg-red-950/30 px-3 py-2 text-sm text-red-600 dark:text-red-400">{serverError}</p>}
 
         <div className="flex gap-3">
-          <Button type="submit" loading={isSubmitting} size="lg">{isEdit ? 'Update Job' : 'Post Job'}</Button>
-          <Button type="button" variant="secondary" size="lg" onClick={() => navigate('/company/jobs')}>Cancel</Button>
+          <Button type="submit" loading={isSubmitting} size="lg">{isEdit ? t('company.updateJob') : t('company.postJob')}</Button>
+          <Button type="button" variant="secondary" size="lg" onClick={() => navigate('/company/jobs')}>{t('common.cancel')}</Button>
         </div>
       </form>
     </div>

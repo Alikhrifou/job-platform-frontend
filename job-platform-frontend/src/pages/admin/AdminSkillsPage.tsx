@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import type { Skill } from '../../types';
 import Button from '../../components/ui/Button';
@@ -14,6 +15,7 @@ export default function AdminSkillsPage() {
   const [form, setForm] = useState<SkillForm>(empty);
   const [editId, setEditId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Skill | null>(null);
+  const { t } = useTranslation();
 
   const load = () => {
     setLoading(true);
@@ -52,21 +54,21 @@ export default function AdminSkillsPage() {
   return (
     <div>
       <div className="mb-6">
-        <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
-        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Manage Skills</h1>
+        <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; {t('admin.dashboard')}</Link>
+        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{t('admin.manageSkills')}</h1>
       </div>
 
       {/* Add / Edit form */}
       <div className="mb-6 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
-        <h2 className="mb-3 font-semibold text-gray-800 dark:text-slate-100">{editId ? 'Edit Skill' : 'Add Skill'}</h2>
+        <h2 className="mb-3 font-semibold text-gray-800 dark:text-slate-100">{editId ? t('admin.editSkill') : t('admin.addSkill')}</h2>
         <div className="grid gap-3 sm:grid-cols-3">
-          <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="React" />
-          <Input label="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Frontend" />
-          <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optional" />
+          <Input label={t('admin.name')} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="React" />
+          <Input label={t('admin.category')} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Frontend" />
+          <Input label={t('admin.descriptionLabel')} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={t('admin.optional')} />
         </div>
         <div className="mt-4 flex gap-2">
-          <Button size="sm" onClick={handleSave}>{editId ? 'Update' : 'Create'}</Button>
-          {editId && <Button size="sm" variant="ghost" onClick={() => { setForm(empty); setEditId(null); }}>Cancel</Button>}
+          <Button size="sm" onClick={handleSave}>{editId ? t('admin.update') : t('admin.create')}</Button>
+          {editId && <Button size="sm" variant="ghost" onClick={() => { setForm(empty); setEditId(null); }}>{t('common.cancel')}</Button>}
         </div>
       </div>
 
@@ -79,10 +81,10 @@ export default function AdminSkillsPage() {
             <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Category</th>
-                <th className="px-4 py-3">Description</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th className="px-4 py-3">{t('admin.name')}</th>
+                <th className="px-4 py-3">{t('admin.category')}</th>
+                <th className="px-4 py-3">{t('admin.descriptionLabel')}</th>
+                <th className="px-4 py-3 text-right">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -96,8 +98,8 @@ export default function AdminSkillsPage() {
                   <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{s.description ?? '—'}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => startEdit(s)}>Edit</Button>
-                      <Button size="sm" variant="danger" onClick={() => setDeleteTarget(s)}>Delete</Button>
+                      <Button size="sm" variant="ghost" onClick={() => startEdit(s)}>{t('common.edit')}</Button>
+                      <Button size="sm" variant="danger" onClick={() => setDeleteTarget(s)}>{t('common.delete')}</Button>
                     </div>
                   </td>
                 </tr>
@@ -111,13 +113,13 @@ export default function AdminSkillsPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Delete Skill</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('admin.deleteSkill')}</h3>
             <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">
-              Are you sure you want to delete <strong>{deleteTarget.name}</strong>? This may affect students and jobs using this skill.
+              {t('admin.deleteSkillConfirm', { name: deleteTarget.name })}
             </p>
             <div className="mt-5 flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancel</Button>
-              <Button variant="danger" onClick={confirmDelete}>Delete</Button>
+              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
+              <Button variant="danger" onClick={confirmDelete}>{t('common.delete')}</Button>
             </div>
           </div>
         </div>

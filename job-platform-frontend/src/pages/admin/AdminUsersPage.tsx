@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import type { UserResponse } from '../../types';
 import Button from '../../components/ui/Button';
@@ -15,6 +16,7 @@ export default function AdminUsersPage() {
   const [form, setForm] = useState(emptyForm);
   const [creating, setCreating] = useState(false);
   const [formError, setFormError] = useState('');
+  const { t } = useTranslation();
 
   const load = () => {
     setLoading(true);
@@ -73,10 +75,10 @@ export default function AdminUsersPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
-          <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Manage Users</h1>
+          <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; {t('admin.dashboard')}</Link>
+          <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{t('admin.manageUsers')}</h1>
         </div>
-        <Button onClick={() => setShowCreate(true)}>+ Create User</Button>
+        <Button onClick={() => setShowCreate(true)}>+ {t('admin.createUser')}</Button>
       </div>
 
       {loading ? (
@@ -87,11 +89,11 @@ export default function AdminUsersPage() {
             <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Email</th>
-                <th className="px-4 py-3">Role</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th className="px-4 py-3">{t('admin.name')}</th>
+                <th className="px-4 py-3">{t('auth.email')}</th>
+                <th className="px-4 py-3">{t('admin.role')}</th>
+                <th className="px-4 py-3">{t('admin.status')}</th>
+                <th className="px-4 py-3 text-right">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -103,16 +105,16 @@ export default function AdminUsersPage() {
                   <td className="px-4 py-3">{roleBadge(u.role)}</td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${u.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                      {u.isActive ? 'Active' : 'Disabled'}
+                      {u.isActive ? t('admin.active') : t('admin.disabled')}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-2">
                       <Button size="sm" variant="ghost" onClick={() => toggleActive(u.id)}>
-                        {u.isActive ? 'Disable' : 'Enable'}
+                        {u.isActive ? t('admin.disable') : t('admin.enable')}
                       </Button>
                       <Button size="sm" variant="danger" onClick={() => setDeleteTarget(u)}>
-                        Delete
+                        {t('common.delete')}
                       </Button>
                     </div>
                   </td>
@@ -127,13 +129,13 @@ export default function AdminUsersPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Delete User</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('admin.deleteUser')}</h3>
             <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">
-              Are you sure you want to delete <strong>{deleteTarget.firstName} {deleteTarget.lastName}</strong> ({deleteTarget.email})? This action cannot be undone.
+              {t('admin.deleteUserConfirm', { name: `${deleteTarget.firstName} ${deleteTarget.lastName}`, email: deleteTarget.email })}
             </p>
             <div className="mt-5 flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancel</Button>
-              <Button variant="danger" onClick={confirmDelete}>Delete</Button>
+              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
+              <Button variant="danger" onClick={confirmDelete}>{t('common.delete')}</Button>
             </div>
           </div>
         </div>
@@ -143,25 +145,25 @@ export default function AdminUsersPage() {
       {showCreate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Create New User</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('admin.createNewUser')}</h3>
 
             {formError && (
               <p className="mt-2 rounded-lg bg-red-50 dark:bg-red-950/30 px-3 py-2 text-sm text-red-600 dark:text-red-400">{formError}</p>
             )}
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <Input label="First Name" value={form.firstName}
+              <Input label={t('auth.firstName')} value={form.firstName}
                 onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} />
-              <Input label="Last Name" value={form.lastName}
+              <Input label={t('auth.lastName')} value={form.lastName}
                 onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))} />
-              <Input label="Email" type="email" value={form.email}
+              <Input label={t('auth.email')} type="email" value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
-              <Input label="Phone" value={form.phoneNumber}
+              <Input label={t('admin.phone')} value={form.phoneNumber}
                 onChange={(e) => setForm((f) => ({ ...f, phoneNumber: e.target.value }))} />
-              <Input label="Password" type="password" value={form.password}
+              <Input label={t('auth.password')} type="password" value={form.password}
                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} />
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700 dark:text-slate-200">Role</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('admin.role')}</label>
                 <select value={form.role}
                   onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
                   className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
@@ -173,8 +175,8 @@ export default function AdminUsersPage() {
             </div>
 
             <div className="mt-5 flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => { setShowCreate(false); setForm(emptyForm); setFormError(''); }}>Cancel</Button>
-              <Button onClick={handleCreate} loading={creating}>Create User</Button>
+              <Button variant="ghost" onClick={() => { setShowCreate(false); setForm(emptyForm); setFormError(''); }}>{t('common.cancel')}</Button>
+              <Button onClick={handleCreate} loading={creating}>{t('admin.createUser')}</Button>
             </div>
           </div>
         </div>

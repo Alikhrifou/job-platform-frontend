@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import type { JobOfferResponse } from '../../types';
 import Button from '../../components/ui/Button';
@@ -8,6 +9,7 @@ export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<JobOfferResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<JobOfferResponse | null>(null);
+  const { t } = useTranslation();
 
   const load = () => {
     setLoading(true);
@@ -28,8 +30,8 @@ export default function AdminJobsPage() {
   return (
     <div>
       <div className="mb-6">
-        <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
-        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Manage Jobs</h1>
+        <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; {t('admin.dashboard')}</Link>
+        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{t('admin.manageJobs')}</h1>
       </div>
 
       {loading ? (
@@ -40,13 +42,13 @@ export default function AdminJobsPage() {
             <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Company</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Apps</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th className="px-4 py-3">{t('admin.title')}</th>
+                <th className="px-4 py-3">{t('admin.company')}</th>
+                <th className="px-4 py-3">{t('company.location')}</th>
+                <th className="px-4 py-3">{t('admin.type')}</th>
+                <th className="px-4 py-3">{t('admin.status')}</th>
+                <th className="px-4 py-3">{t('admin.apps')}</th>
+                <th className="px-4 py-3 text-right">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -63,12 +65,12 @@ export default function AdminJobsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${j.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                      {j.isActive ? 'Active' : 'Inactive'}
+                      {j.isActive ? t('admin.active') : t('admin.inactive')}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{j.applicationsCount}</td>
                   <td className="px-4 py-3 text-right">
-                    <Button size="sm" variant="danger" onClick={() => setDeleteTarget(j)}>Delete</Button>
+                    <Button size="sm" variant="danger" onClick={() => setDeleteTarget(j)}>{t('common.delete')}</Button>
                   </td>
                 </tr>
               ))}
@@ -81,13 +83,13 @@ export default function AdminJobsPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Delete Job</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">{t('company.deleteJob')}</h3>
             <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">
-              Are you sure you want to delete <strong>{deleteTarget.title}</strong>? All associated applications will also be removed.
+              {t('admin.deleteJobConfirm', { title: deleteTarget.title })}
             </p>
             <div className="mt-5 flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>Cancel</Button>
-              <Button variant="danger" onClick={confirmDelete}>Delete</Button>
+              <Button variant="ghost" onClick={() => setDeleteTarget(null)}>{t('common.cancel')}</Button>
+              <Button variant="danger" onClick={confirmDelete}>{t('common.delete')}</Button>
             </div>
           </div>
         </div>

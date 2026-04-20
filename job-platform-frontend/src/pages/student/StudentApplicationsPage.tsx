@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import type { ApplicationResponse } from '../../types';
 
@@ -15,6 +16,7 @@ const STATUS_STYLES: Record<string, string> = {
 export default function StudentApplicationsPage() {
   const [apps, setApps] = useState<ApplicationResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     api.get<ApplicationResponse[]>('/api/applications/my-applications')
@@ -30,12 +32,12 @@ export default function StudentApplicationsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">My Applications</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">{t('student.myApplications')}</h1>
 
       {apps.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-300 dark:border-slate-600 py-16 text-center text-gray-400 dark:text-slate-500">
           <p className="text-4xl">📭</p>
-          <p className="mt-2">No applications yet. Browse jobs and apply!</p>
+          <p className="mt-2">{t('student.noApplications')}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -44,14 +46,14 @@ export default function StudentApplicationsPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 dark:text-white">{app.jobTitle}</h3>
                 <p className="text-sm text-blue-600">{app.companyName}</p>
-                <p className="mt-1 text-xs text-gray-400 dark:text-slate-500">Applied {new Date(app.appliedAt).toLocaleDateString()}</p>
+                <p className="mt-1 text-xs text-gray-400 dark:text-slate-500">{t('student.applied')} {new Date(app.appliedAt).toLocaleDateString()}</p>
               </div>
               <div className="flex flex-col items-end gap-2">
                 <span className={`rounded-full px-3 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300'}`}>
                   {app.status.replace('_', ' ')}
                 </span>
                 {app.matchScore !== undefined && (
-                  <span className="text-xs text-gray-500 dark:text-slate-400">Match: {app.matchScore.toFixed(0)}%</span>
+                  <span className="text-xs text-gray-500 dark:text-slate-400">{t('student.match')}: {app.matchScore.toFixed(0)}%</span>
                 )}
               </div>
             </div>

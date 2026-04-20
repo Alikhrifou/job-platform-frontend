@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import type { JobOfferResponse } from '../../types';
 import Button from '../../components/ui/Button';
@@ -11,17 +12,18 @@ const JOB_TYPE_COLORS: Record<string, string> = {
   CONTRACT: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-700',
 };
 
-const JOB_TYPE_LABELS: Record<string, string> = {
-  INTERNSHIP: 'Internship',
-  JOB: 'Full-time',
-  PART_TIME: 'Part-time',
-  CONTRACT: 'Contract',
-};
-
 export default function JobsPage() {
   const [jobs, setJobs] = useState<JobOfferResponse[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
+
+  const jobTypeLabels: Record<string, string> = {
+    INTERNSHIP: t('jobs.internship'),
+    JOB: t('jobs.fullTime'),
+    PART_TIME: t('jobs.partTime'),
+    CONTRACT: t('jobs.contract'),
+  };
 
   const fetchJobs = useCallback((query: string) => {
     setLoading(true);
@@ -50,8 +52,8 @@ export default function JobsPage() {
     <div>
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Browse Jobs</h1>
-        <p className="mt-1 text-slate-500 dark:text-slate-400">Find your next opportunity from top companies</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{t('jobs.browseJobs')}</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">{t('jobs.findOpportunity')}</p>
       </div>
 
       {/* Search bar */}
@@ -63,12 +65,12 @@ export default function JobsPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search jobs or companies..."
+            placeholder={t('jobs.searchPlaceholder')}
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-800"
           />
         </div>
         <span className="text-sm text-slate-400">
-          {filtered.length} {filtered.length === 1 ? 'job' : 'jobs'} found
+          {filtered.length} {filtered.length === 1 ? t('jobs.jobSingular') : t('jobs.jobPlural')} {t('jobs.found')}
         </span>
       </div>
 
@@ -83,8 +85,8 @@ export default function JobsPage() {
           <svg className="mb-3 h-12 w-12 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="font-medium">No jobs found</p>
-          <p className="mt-1 text-sm">Try a different search term</p>
+          <p className="font-medium">{t('jobs.noJobsFound')}</p>
+          <p className="mt-1 text-sm">{t('jobs.tryDifferentSearch')}</p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -98,11 +100,11 @@ export default function JobsPage() {
                 <div className="mb-3 flex items-center gap-2">
                   {job.jobType && (
                     <span className={`rounded-lg border px-2.5 py-0.5 text-xs font-semibold ${JOB_TYPE_COLORS[job.jobType] ?? 'bg-slate-100 text-slate-600 border-slate-200'}`}>
-                      {JOB_TYPE_LABELS[job.jobType] ?? job.jobType}
+                      {jobTypeLabels[job.jobType] ?? job.jobType}
                     </span>
                   )}
                   {!job.isActive && (
-                    <span className="rounded-lg border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-500">Closed</span>
+                    <span className="rounded-lg border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-500">{t('jobs.closed')}</span>
                   )}
                 </div>
 
@@ -141,7 +143,7 @@ export default function JobsPage() {
                     ))}
                     {Object.keys(job.requiredSkills).length > 4 && (
                       <span className="rounded-lg bg-slate-100 px-2 py-0.5 text-xs text-slate-400">
-                        +{Object.keys(job.requiredSkills).length - 4} more
+                        +{Object.keys(job.requiredSkills).length - 4} {t('jobs.more')}
                       </span>
                     )}
                   </div>
@@ -149,9 +151,9 @@ export default function JobsPage() {
               </div>
 
               <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
-                <span className="text-xs text-slate-400">{job.applicationsCount} applicants</span>
+                <span className="text-xs text-slate-400">{job.applicationsCount} {t('jobs.applicants')}</span>
                 <Link to={`/jobs/${job.id}`}>
-                  <Button size="sm">View job →</Button>
+                  <Button size="sm">{t('jobs.viewJob')} →</Button>
                 </Link>
               </div>
             </div>

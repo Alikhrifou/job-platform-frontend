@@ -1,7 +1,9 @@
 import { Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Navbar from './Navbar';
 
 export default function Layout() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <Navbar />
@@ -9,7 +11,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <footer className="mt-16 border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-500">
-        © {new Date().getFullYear()} JobMatch · Built with ❤️ in Maroc
+        {t('footer.text', { year: new Date().getFullYear() })}
       </footer>
     </div>
   );

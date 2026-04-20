@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import Button from '../../components/ui/Button';
 import type { JobOfferResponse } from '../../types';
@@ -12,14 +13,15 @@ const JOB_TYPE_COLORS: Record<string, string> = {
   CONTRACT: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-700',
 };
 
-const JOB_TYPE_LABELS: Record<string, string> = {
-  INTERNSHIP: 'Internship', JOB: 'Full-time', PART_TIME: 'Part-time', CONTRACT: 'Contract',
-};
-
 export default function JobDetailPage() {
   const { jobId } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated, role } = useAppSelector((s) => s.auth);
+  const { t } = useTranslation();
+
+  const jobTypeLabels: Record<string, string> = {
+    INTERNSHIP: t('jobs.internship'), JOB: t('jobs.fullTime'), PART_TIME: t('jobs.partTime'), CONTRACT: t('jobs.contract'),
+  };
 
   const [job, setJob] = useState<JobOfferResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -44,7 +46,7 @@ export default function JobDetailPage() {
       setApplied(true);
       setShowForm(false);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to apply');
+      setError(err.response?.data?.message || t('jobs.failedToApply'));
     } finally {
       setApplying(false);
     }
@@ -58,8 +60,8 @@ export default function JobDetailPage() {
   );
   if (!job) return (
     <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-      <p className="text-lg font-medium">Job not found</p>
-      <Link to="/jobs" className="mt-3 text-sm text-indigo-600 hover:underline dark:text-indigo-400">← Back to jobs</Link>
+      <p className="text-lg font-medium">{t('jobs.jobNotFound')}</p>
+      <Link to="/jobs" className="mt-3 text-sm text-indigo-600 hover:underline dark:text-indigo-400">← {t('jobs.backToJobs')}</Link>
     </div>
   );
 
@@ -70,7 +72,7 @@ export default function JobDetailPage() {
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        Back to jobs
+        {t('jobs.backToJobs')}
       </Link>
 
       {/* Main card */}
@@ -81,11 +83,11 @@ export default function JobDetailPage() {
             <div className="mb-3 flex flex-wrap gap-2">
               {job.jobType && (
                 <span className={`rounded-lg border px-3 py-0.5 text-xs font-semibold ${JOB_TYPE_COLORS[job.jobType] ?? 'bg-slate-100 text-slate-600 border-slate-200'}`}>
-                  {JOB_TYPE_LABELS[job.jobType] ?? job.jobType}
+                  {jobTypeLabels[job.jobType] ?? job.jobType}
                 </span>
               )}
               {!job.isActive && (
-                <span className="rounded-lg border border-red-200 bg-red-50 px-3 py-0.5 text-xs font-semibold text-red-500">Closed</span>
+                <span className="rounded-lg border border-red-200 bg-red-50 px-3 py-0.5 text-xs font-semibold text-red-500">{t('jobs.closed')}</span>
               )}
             </div>
 
@@ -127,14 +129,14 @@ export default function JobDetailPage() {
                 <svg className="h-4 w-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-semibold text-emerald-700">Applied!</span>
+                <span className="text-sm font-semibold text-emerald-700">{t('jobs.applied')}</span>
               </div>
             ) : role === 'STUDENT' && job.isActive ? (
               <Button onClick={() => setShowForm(!showForm)}>
-                {showForm ? 'Cancel' : 'Apply Now'}
+                {showForm ? t('common.cancel') : t('jobs.applyNow')}
               </Button>
             ) : !isAuthenticated && job.isActive ? (
-              <Button onClick={() => navigate('/login')}>Login to Apply</Button>
+              <Button onClick={() => navigate('/login')}>{t('jobs.loginToApply')}</Button>
             ) : null}
           </div>
         </div>
@@ -142,19 +144,19 @@ export default function JobDetailPage() {
         {/* Apply form */}
         {showForm && (
           <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 dark:border-indigo-800 dark:bg-indigo-950/30">
-            <h3 className="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">Your Application</h3>
-            <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Cover Letter <span className="text-slate-400">(optional)</span></label>
+            <h3 className="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">{t('jobs.yourApplication')}</h3>
+            <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">{t('jobs.coverLetter')} <span className="text-slate-400">({t('jobs.optional')})</span></label>
             <textarea
               rows={4}
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
-              placeholder="Tell them why you're a great fit..."
+              placeholder={t('jobs.coverLetterPlaceholder')}
               className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
             {error && <p className="mt-1.5 text-xs font-medium text-red-500">{error}</p>}
             <div className="mt-3 flex gap-2">
-              <Button onClick={handleApply} loading={applying} size="sm">Submit Application</Button>
-              <Button variant="secondary" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
+              <Button onClick={handleApply} loading={applying} size="sm">{t('jobs.submitApplication')}</Button>
+              <Button variant="secondary" size="sm" onClick={() => setShowForm(false)}>{t('common.cancel')}</Button>
             </div>
           </div>
         )}
@@ -167,7 +169,7 @@ export default function JobDetailPage() {
             <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            Job Description
+            {t('jobs.jobDescription')}
           </h2>
           <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-300">{job.description}</p>
         </div>
@@ -180,7 +182,7 @@ export default function JobDetailPage() {
             <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
             </svg>
-            Required Skills
+            {t('jobs.requiredSkills')}
           </h2>
           <div className="flex flex-wrap gap-2.5">
             {Object.entries(job.requiredSkills).map(([skill, level]) => (
@@ -205,9 +207,9 @@ export default function JobDetailPage() {
 
       {/* Footer meta */}
       <div className="mt-4 flex items-center gap-4 text-xs text-slate-400">
-        <span>{job.applicationsCount} applicants</span>
+        <span>{job.applicationsCount} {t('jobs.applicants')}</span>
         <span>·</span>
-        <span>Posted {new Date(job.createdAt).toLocaleDateString()}</span>
+        <span>{t('jobs.posted')} {new Date(job.createdAt).toLocaleDateString()}</span>
       </div>
     </div>
   );

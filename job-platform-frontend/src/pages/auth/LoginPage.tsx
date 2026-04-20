@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import { setCredentials } from '../../features/auth/authSlice';
 import { useAppDispatch } from '../../hooks/redux';
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
+  const { t } = useTranslation();
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginRequest>({
     resolver: yupResolver(schema),
@@ -35,7 +37,7 @@ export default function LoginPage() {
       else if (role === 'COMPANY') navigate('/company');
       else navigate('/admin');
     } catch (err: any) {
-      setServerError(err.response?.data?.message || 'Invalid email or password');
+      setServerError(err.response?.data?.message || t('auth.invalidCredentials'));
     }
   };
 
@@ -43,20 +45,20 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Welcome back</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('auth.welcomeBack')}</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-slate-400">{t('auth.signInToAccount')}</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <Input
-            label="Email"
+            label={t('auth.email')}
             type="email"
             placeholder="you@example.com"
             error={errors.email?.message}
             {...register('email')}
           />
           <Input
-            label="Password"
+            label={t('auth.password')}
             type="password"
             placeholder="••••••••"
             error={errors.password?.message}
@@ -70,14 +72,14 @@ export default function LoginPage() {
           )}
 
           <Button type="submit" loading={isSubmitting} size="lg" className="mt-2 w-full">
-            Sign in
+            {t('auth.signIn')}
           </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500 dark:text-slate-400">
-          Don't have an account?{' '}
+          {t('auth.noAccount')}{' '}
           <Link to="/register" className="font-medium text-blue-600 hover:underline dark:text-indigo-400">
-            Register
+            {t('auth.register')}
           </Link>
         </p>
       </div>

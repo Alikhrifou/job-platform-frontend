@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
@@ -20,6 +21,7 @@ const schema = yup.object({
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
+  const { t } = useTranslation();
 
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<RegisterRequest>({
     resolver: yupResolver(schema) as any,
@@ -34,7 +36,7 @@ export default function RegisterPage() {
       await api.post('/api/auth/register', data);
       navigate('/login');
     } catch (err: any) {
-      setServerError(err.response?.data?.message || 'Registration failed');
+      setServerError(err.response?.data?.message || t('auth.registrationFailed'));
     }
   };
 
@@ -49,14 +51,14 @@ export default function RegisterPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create your account</h1>
-            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">Join thousands of professionals on JobMatch</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('auth.createYourAccount')}</h1>
+            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">{t('auth.joinPlatform')}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             {/* Role selector */}
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">I am a</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">{t('auth.iAmA')}</label>
               <div className="grid grid-cols-2 gap-3">
                 {(['STUDENT', 'COMPANY'] as const).map((r) => (
                   <label
@@ -77,10 +79,10 @@ export default function RegisterPage() {
                       <p className={`text-sm font-semibold ${
                         selectedRole === r ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-700 dark:text-slate-200'
                       }`}>
-                        {r === 'STUDENT' ? 'Student' : 'Company'}
+                        {r === 'STUDENT' ? t('auth.student') : t('auth.company')}
                       </p>
                       <p className="text-xs text-slate-400">
-                        {r === 'STUDENT' ? 'Find your dream job' : 'Hire top talent'}
+                        {r === 'STUDENT' ? t('auth.findDreamJob') : t('auth.hireTopTalent')}
                       </p>
                     </div>
                   </label>
@@ -90,13 +92,13 @@ export default function RegisterPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Input label="First name" placeholder="Ali" error={errors.firstName?.message} {...register('firstName')} />
-              <Input label="Last name" placeholder="Benali" error={errors.lastName?.message} {...register('lastName')} />
+              <Input label={t('auth.firstName')} placeholder="Ali" error={errors.firstName?.message} {...register('firstName')} />
+              <Input label={t('auth.lastName')} placeholder="Benali" error={errors.lastName?.message} {...register('lastName')} />
             </div>
 
-            <Input label="Email address" type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
-            <Input label="Password" type="password" placeholder="••••••••" hint="At least 6 characters" error={errors.password?.message} {...register('password')} />
-            <Input label="Phone number" placeholder="+213 0600000000" error={errors.phoneNumber?.message} {...register('phoneNumber')} />
+            <Input label={t('auth.emailAddress')} type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
+            <Input label={t('auth.password')} type="password" placeholder="••••••••" hint={t('auth.passwordHint')} error={errors.password?.message} {...register('password')} />
+            <Input label={t('auth.phoneNumber')} placeholder="+213 0600000000" error={errors.phoneNumber?.message} {...register('phoneNumber')} />
 
             {serverError && (
               <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-500/30 dark:bg-red-950/30">
@@ -108,14 +110,14 @@ export default function RegisterPage() {
             )}
 
             <Button type="submit" loading={isSubmitting} size="lg" className="mt-1 w-full">
-              Create account
+              {t('auth.createAccount')}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-            Already have an account?{' '}
+            {t('auth.alreadyHaveAccount')}{' '}
             <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300">
-              Sign in
+              {t('auth.signIn')}
             </Link>
           </p>
         </div>
