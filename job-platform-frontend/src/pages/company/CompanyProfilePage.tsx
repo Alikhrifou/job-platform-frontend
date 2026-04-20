@@ -41,11 +41,11 @@ export default function CompanyProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Company Profile</h1>
+      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Company Profile</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800">Company Info</h2>
+        <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Company Info</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <Input label="Company Name" placeholder="Acme Corp" error={errors.companyName?.message} {...register('companyName')} />
@@ -57,8 +57,8 @@ export default function CompanyProfilePage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800">Location</h2>
+        <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Location</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Address" placeholder="123 Main St" {...register('address')} />
             <Input label="City" placeholder="Paris" {...register('city')} />
@@ -67,9 +67,9 @@ export default function CompanyProfilePage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800">Description</h2>
-          <textarea {...register('description')} rows={4} placeholder="Tell candidates about your company..." className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+        <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+          <h2 className="mb-4 font-semibold text-gray-800 dark:text-slate-100">Description</h2>
+          <textarea {...register('description')} rows={4} placeholder="Tell candidates about your company..." className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
         </section>
 
         <div className="flex items-center gap-3">

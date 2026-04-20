@@ -10,9 +10,9 @@ function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onCancel}>
-      <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="mt-2 text-sm text-gray-600">{message}</p>
+      <div className="w-full max-w-sm rounded-xl bg-white dark:bg-slate-900 p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
+        <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <Button variant="secondary" size="sm" onClick={onCancel}>Cancel</Button>
           <Button variant="danger" size="sm" onClick={onConfirm}>Delete</Button>
@@ -42,7 +42,7 @@ export default function CompanyJobsPage() {
     load();
   };
 
-  if (loading) return <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 animate-pulse rounded-xl bg-gray-200" />)}</div>;
+  if (loading) return <div className="flex flex-col gap-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-20 animate-pulse rounded-xl bg-gray-200 dark:bg-slate-700" />)}</div>;
 
   return (
     <div>
@@ -55,27 +55,27 @@ export default function CompanyJobsPage() {
       />
 
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">My Job Offers</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Job Offers</h1>
         <Link to="/company/jobs/new"><Button>+ Post Job</Button></Link>
       </div>
 
       {jobs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-400">
+        <div className="rounded-xl border border-dashed border-gray-300 dark:border-slate-600 py-16 text-center text-gray-400 dark:text-slate-500">
           <p className="text-4xl">📭</p>
           <p className="mt-2">No job offers yet.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
           {jobs.map((job) => (
-            <div key={job.id} className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+            <div key={job.id} className="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-gray-900">{job.title}</h3>
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${job.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{job.title}</h3>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${job.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'}`}>
                     {job.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </div>
-                <p className="text-sm text-gray-500">📍 {job.location} · {job.applicationsCount} applicants</p>
+                <p className="text-sm text-gray-500 dark:text-slate-400">📍 {job.location} · {job.applicationsCount} applicants</p>
               </div>
               <div className="flex items-center gap-2">
                 <Link to={`/company/applications/${job.id}`}><Button size="sm" variant="secondary">Applications</Button></Link>

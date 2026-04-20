@@ -11,7 +11,7 @@ const STATUS_STYLES: Record<string, string> = {
   SHORTLISTED: 'bg-blue-100 text-blue-700',
   INTERVIEW_SCHEDULED: 'bg-purple-100 text-purple-700',
   OFFER_EXTENDED: 'bg-emerald-100 text-emerald-700',
-  DECLINED: 'bg-gray-100 text-gray-600',
+  DECLINED: 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300',
 };
 
 const STATUS_OPTIONS: ApplicationStatus[] = [
@@ -47,17 +47,17 @@ export default function CompanyApplicationsPage() {
     return acc;
   }, {});
 
-  if (loading) return <div className="flex flex-col gap-3">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-20 animate-pulse rounded-xl bg-gray-200" />)}</div>;
+  if (loading) return <div className="flex flex-col gap-3">{Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-20 animate-pulse rounded-xl bg-gray-200 dark:bg-slate-700" />)}</div>;
 
   return (
     <div>
       {/* Header */}
       <div className="mb-6">
         <Link to="/company/jobs" className="text-sm text-indigo-600 hover:underline">&larr; My Jobs</Link>
-        <h1 className="mt-1 text-2xl font-bold text-gray-900">
+        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
           {jobId ? 'Job Applications' : 'All Applications'}
         </h1>
-        <p className="text-sm text-gray-500">{apps.length} total application{apps.length !== 1 ? 's' : ''}</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">{apps.length} total application{apps.length !== 1 ? 's' : ''}</p>
       </div>
 
       {/* Stats row */}
@@ -65,7 +65,7 @@ export default function CompanyApplicationsPage() {
         <div className="mb-6 flex flex-wrap gap-2">
           <button
             onClick={() => setStatusFilter('ALL')}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${statusFilter === 'ALL' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition ${statusFilter === 'ALL' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:bg-gray-200 dark:bg-slate-700'}`}
           >
             All ({apps.length})
           </button>
@@ -82,34 +82,34 @@ export default function CompanyApplicationsPage() {
       )}
 
       {apps.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 py-16 text-center text-gray-400">
+        <div className="rounded-xl border border-dashed border-gray-300 dark:border-slate-600 py-16 text-center text-gray-400 dark:text-slate-500">
           <p className="text-4xl">📭</p>
           <p className="mt-2">No applications yet.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((app) => (
-            <div key={app.id} className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+            <div key={app.id} className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
               <div className="flex items-start justify-between gap-4">
                 {/* Left: student info */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900">{app.studentName}</h3>
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100'}`}>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">{app.studentName}</h3>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100 dark:bg-slate-800'}`}>
                       {app.status.replace(/_/g, ' ')}
                     </span>
                   </div>
-                  {app.studentEmail && <p className="text-sm text-gray-500">{app.studentEmail}</p>}
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  {app.studentEmail && <p className="text-sm text-gray-500 dark:text-slate-400">{app.studentEmail}</p>}
+                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
                     Applied {new Date(app.appliedAt).toLocaleDateString()}
-                    {!jobId && <> &middot; <span className="font-medium text-gray-600">{app.jobTitle}</span></>}
+                    {!jobId && <> &middot; <span className="font-medium text-gray-600 dark:text-slate-300">{app.jobTitle}</span></>}
                   </p>
                   {app.studentUniversity && (
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                       🎓 {app.studentUniversity}{app.studentMajor && ` · ${app.studentMajor}`}{app.studentGpa ? ` · GPA ${app.studentGpa}` : ''}
                     </p>
                   )}
-                  {app.coverLetter && <p className="mt-2 text-sm text-gray-600 line-clamp-2">{app.coverLetter}</p>}
+                  {app.coverLetter && <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 line-clamp-2">{app.coverLetter}</p>}
                 </div>
 
                 {/* Right: score + actions */}
@@ -119,7 +119,7 @@ export default function CompanyApplicationsPage() {
                       <span className={`text-lg font-bold ${app.matchScore >= 70 ? 'text-green-600' : app.matchScore >= 40 ? 'text-yellow-600' : 'text-red-500'}`}>
                         {app.matchScore.toFixed(0)}%
                       </span>
-                      <p className="text-[10px] text-gray-400">Match</p>
+                      <p className="text-[10px] text-gray-400 dark:text-slate-500">Match</p>
                     </div>
                   )}
                   <div className="flex gap-1.5 flex-wrap justify-end">
@@ -169,7 +169,7 @@ export default function CompanyApplicationsPage() {
                     <select
                       value={app.status}
                       onChange={(e) => updateStatus(app.id, e.target.value as ApplicationStatus)}
-                      className="mt-1 rounded border border-gray-200 px-2 py-1 text-xs text-gray-600 outline-none focus:ring-2 focus:ring-indigo-400"
+                      className="mt-1 rounded border border-gray-200 dark:border-slate-700 px-2 py-1 text-xs text-gray-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-indigo-400"
                     >
                       {STATUS_OPTIONS.map((s) => (
                         <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
@@ -186,53 +186,53 @@ export default function CompanyApplicationsPage() {
       {/* Student Profile Side Panel */}
       {selected && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onClick={() => setSelected(null)}>
-          <div className="h-full w-full max-w-md overflow-y-auto bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+          <div className="h-full w-full max-w-md overflow-y-auto bg-white dark:bg-slate-900 p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Student Profile</h2>
-              <button onClick={() => setSelected(null)} className="rounded-lg p-1 hover:bg-gray-100 text-gray-400">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Student Profile</h2>
+              <button onClick={() => setSelected(null)} className="rounded-lg p-1 hover:bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
 
             {/* Name & contact */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">{selected.studentName}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{selected.studentName}</h3>
               {selected.studentEmail && (
                 <a href={`mailto:${selected.studentEmail}`} className="text-sm text-indigo-600 hover:underline">{selected.studentEmail}</a>
               )}
             </div>
 
             {/* Academic info */}
-            <section className="mb-5 rounded-xl border border-gray-200 p-4">
-              <h4 className="text-xs font-semibold uppercase text-gray-400 mb-2">Academic Info</h4>
+            <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Academic Info</h4>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 {selected.studentUniversity && (
-                  <div><p className="text-gray-400 text-xs">University</p><p className="font-medium text-gray-800">{selected.studentUniversity}</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">University</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentUniversity}</p></div>
                 )}
                 {selected.studentMajor && (
-                  <div><p className="text-gray-400 text-xs">Major</p><p className="font-medium text-gray-800">{selected.studentMajor}</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">Major</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentMajor}</p></div>
                 )}
                 {selected.studentGpa !== undefined && selected.studentGpa > 0 && (
-                  <div><p className="text-gray-400 text-xs">GPA</p><p className="font-medium text-gray-800">{selected.studentGpa}</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">GPA</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentGpa}</p></div>
                 )}
                 {selected.matchScore !== undefined && selected.matchScore > 0 && (
-                  <div><p className="text-gray-400 text-xs">Match Score</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">Match Score</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
                 )}
               </div>
             </section>
 
             {/* Bio */}
             {selected.studentBio && (
-              <section className="mb-5 rounded-xl border border-gray-200 p-4">
-                <h4 className="text-xs font-semibold uppercase text-gray-400 mb-2">About</h4>
-                <p className="text-sm text-gray-700 leading-relaxed">{selected.studentBio}</p>
+              <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">About</h4>
+                <p className="text-sm text-gray-700 dark:text-slate-200 leading-relaxed">{selected.studentBio}</p>
               </section>
             )}
 
-            {/* Links */}
+            {/* Links & Resume */}
             {(selected.studentPortfolioUrl || selected.studentResumeUrl) && (
-              <section className="mb-5 rounded-xl border border-gray-200 p-4">
-                <h4 className="text-xs font-semibold uppercase text-gray-400 mb-2">Links</h4>
+              <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Links & Documents</h4>
                 <div className="flex flex-col gap-2">
                   {selected.studentPortfolioUrl && (
                     <a href={selected.studentPortfolioUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:underline break-all">
@@ -240,9 +240,22 @@ export default function CompanyApplicationsPage() {
                     </a>
                   )}
                   {selected.studentResumeUrl && (
-                    <a href={selected.studentResumeUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-600 hover:underline break-all">
-                      📄 Resume
-                    </a>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          const res = await api.get(`/api/students/resume/${selected.studentResumeUrl}`, { responseType: 'blob' });
+                          const blob = new Blob([res.data], { type: res.headers['content-type'] });
+                          const url = URL.createObjectURL(blob);
+                          window.open(url, '_blank');
+                        } catch {
+                          alert('Failed to open resume');
+                        }
+                      }}
+                      className="inline-flex items-center gap-1.5 text-sm text-indigo-600 dark:text-indigo-400 hover:underline text-left"
+                    >
+                      📄 View Resume {selected.studentResumeOriginalName ? `(${selected.studentResumeOriginalName})` : selected.studentResumeUrl.endsWith('.pdf') ? '(PDF)' : '(DOCX)'}
+                    </button>
                   )}
                 </div>
               </section>
@@ -250,15 +263,15 @@ export default function CompanyApplicationsPage() {
 
             {/* Cover letter */}
             {selected.coverLetter && (
-              <section className="mb-5 rounded-xl border border-gray-200 p-4">
-                <h4 className="text-xs font-semibold uppercase text-gray-400 mb-2">Cover Letter</h4>
-                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{selected.coverLetter}</p>
+              <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+                <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Cover Letter</h4>
+                <p className="text-sm text-gray-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">{selected.coverLetter}</p>
               </section>
             )}
 
             {/* Application status */}
-            <section className="mb-5 rounded-xl border border-gray-200 p-4">
-              <h4 className="text-xs font-semibold uppercase text-gray-400 mb-2">Application for {selected.jobTitle}</h4>
+            <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">Application for {selected.jobTitle}</h4>
               <div className="flex items-center gap-3">
                 <span className={`rounded-full px-3 py-0.5 text-xs font-medium ${STATUS_STYLES[selected.status]}`}>
                   {selected.status.replace(/_/g, ' ')}
@@ -266,7 +279,7 @@ export default function CompanyApplicationsPage() {
                 <select
                   value={selected.status}
                   onChange={(e) => updateStatus(selected.id, e.target.value as ApplicationStatus)}
-                  className="rounded border border-gray-200 px-2 py-1 text-xs text-gray-600 outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="rounded border border-gray-200 dark:border-slate-700 px-2 py-1 text-xs text-gray-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>

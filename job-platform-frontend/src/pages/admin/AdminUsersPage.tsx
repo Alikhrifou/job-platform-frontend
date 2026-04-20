@@ -63,7 +63,7 @@ export default function AdminUsersPage() {
       STUDENT: 'bg-green-100 text-green-700',
     };
     return (
-      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors[role] ?? 'bg-gray-100 text-gray-700'}`}>
+      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${colors[role] ?? 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-200'}`}>
         {role}
       </span>
     );
@@ -74,17 +74,17 @@ export default function AdminUsersPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
-          <h1 className="mt-1 text-2xl font-bold text-gray-900">Manage Users</h1>
+          <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Manage Users</h1>
         </div>
         <Button onClick={() => setShowCreate(true)}>+ Create User</Button>
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-500">Loading…</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">Loading…</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
           <table className="w-full text-left text-sm">
-            <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
+            <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3">ID</th>
                 <th className="px-4 py-3">Name</th>
@@ -96,10 +96,10 @@ export default function AdminUsersPage() {
             </thead>
             <tbody className="divide-y">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-xs text-gray-400">{u.id}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{u.firstName} {u.lastName}</td>
-                  <td className="px-4 py-3 text-gray-600">{u.email}</td>
+                <tr key={u.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                  <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">{u.id}</td>
+                  <td className="px-4 py-3 font-medium text-gray-800 dark:text-slate-100">{u.firstName} {u.lastName}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{u.email}</td>
                   <td className="px-4 py-3">{roleBadge(u.role)}</td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${u.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
@@ -126,9 +126,9 @@ export default function AdminUsersPage() {
       {/* Delete confirmation modal */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900">Delete User</h3>
-            <p className="mt-2 text-sm text-gray-600">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Delete User</h3>
+            <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">
               Are you sure you want to delete <strong>{deleteTarget.firstName} {deleteTarget.lastName}</strong> ({deleteTarget.email})? This action cannot be undone.
             </p>
             <div className="mt-5 flex justify-end gap-3">
@@ -142,11 +142,11 @@ export default function AdminUsersPage() {
       {/* Create user modal */}
       {showCreate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900">Create New User</h3>
+          <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Create New User</h3>
 
             {formError && (
-              <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{formError}</p>
+              <p className="mt-2 rounded-lg bg-red-50 dark:bg-red-950/30 px-3 py-2 text-sm text-red-600 dark:text-red-400">{formError}</p>
             )}
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -161,10 +161,10 @@ export default function AdminUsersPage() {
               <Input label="Password" type="password" value={form.password}
                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} />
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">Role</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-200">Role</label>
                 <select value={form.role}
                   onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                  className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="ADMIN">Admin</option>
                   <option value="STUDENT">Student</option>
                   <option value="COMPANY">Company</option>

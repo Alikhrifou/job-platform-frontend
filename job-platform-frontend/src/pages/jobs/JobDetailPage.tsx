@@ -6,10 +6,10 @@ import type { JobOfferResponse } from '../../types';
 import { useAppSelector } from '../../hooks/redux';
 
 const JOB_TYPE_COLORS: Record<string, string> = {
-  INTERNSHIP: 'bg-violet-100 text-violet-700 border-violet-200',
-  JOB: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-  PART_TIME: 'bg-amber-100 text-amber-700 border-amber-200',
-  CONTRACT: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  INTERNSHIP: 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/40 dark:text-violet-300 dark:border-violet-700',
+  JOB: 'bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:border-indigo-700',
+  PART_TIME: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700',
+  CONTRACT: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-700',
 };
 
 const JOB_TYPE_LABELS: Record<string, string> = {
@@ -52,21 +52,21 @@ export default function JobDetailPage() {
 
   if (loading) return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <div className="h-48 animate-pulse rounded-2xl bg-slate-200" />
-      <div className="h-32 animate-pulse rounded-2xl bg-slate-200" />
+      <div className="h-48 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-800" />
+      <div className="h-32 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-800" />
     </div>
   );
   if (!job) return (
     <div className="flex flex-col items-center justify-center py-24 text-slate-400">
       <p className="text-lg font-medium">Job not found</p>
-      <Link to="/jobs" className="mt-3 text-sm text-indigo-600 hover:underline">← Back to jobs</Link>
+      <Link to="/jobs" className="mt-3 text-sm text-indigo-600 hover:underline dark:text-indigo-400">← Back to jobs</Link>
     </div>
   );
 
   return (
     <div className="mx-auto max-w-3xl">
       {/* Back */}
-      <Link to="/jobs" className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-indigo-600">
+      <Link to="/jobs" className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400">
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
@@ -74,7 +74,7 @@ export default function JobDetailPage() {
       </Link>
 
       {/* Main card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex-1">
             {/* Badges */}
@@ -89,8 +89,8 @@ export default function JobDetailPage() {
               )}
             </div>
 
-            <h1 className="text-2xl font-bold text-slate-900">{job.title}</h1>
-            <p className="mt-1.5 text-base font-semibold text-indigo-600">{job.companyName}</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{job.title}</h1>
+            <p className="mt-1.5 text-base font-semibold text-indigo-600 dark:text-indigo-400">{job.companyName}</p>
 
             {/* Meta info */}
             <div className="mt-3 flex flex-wrap gap-4">
@@ -141,15 +141,15 @@ export default function JobDetailPage() {
 
         {/* Apply form */}
         {showForm && (
-          <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
-            <h3 className="mb-3 text-sm font-semibold text-slate-700">Your Application</h3>
-            <label className="mb-1.5 block text-sm font-medium text-slate-600">Cover Letter <span className="text-slate-400">(optional)</span></label>
+          <div className="mt-6 rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 dark:border-indigo-800 dark:bg-indigo-950/30">
+            <h3 className="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-200">Your Application</h3>
+            <label className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Cover Letter <span className="text-slate-400">(optional)</span></label>
             <textarea
               rows={4}
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Tell them why you're a great fit..."
-              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
             {error && <p className="mt-1.5 text-xs font-medium text-red-500">{error}</p>}
             <div className="mt-3 flex gap-2">
@@ -162,21 +162,21 @@ export default function JobDetailPage() {
 
       {/* Description */}
       {job.description && (
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-800">
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-800 dark:text-slate-100">
             <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             Job Description
           </h2>
-          <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700">{job.description}</p>
+          <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-300">{job.description}</p>
         </div>
       )}
 
       {/* Required Skills */}
       {Object.keys(job.requiredSkills).length > 0 && (
-        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-800">
+        <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <h2 className="mb-4 flex items-center gap-2 text-base font-bold text-slate-800 dark:text-slate-100">
             <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
             </svg>
@@ -184,8 +184,8 @@ export default function JobDetailPage() {
           </h2>
           <div className="flex flex-wrap gap-2.5">
             {Object.entries(job.requiredSkills).map(([skill, level]) => (
-              <div key={skill} className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2">
-                <span className="text-sm font-semibold text-slate-700">{skill}</span>
+              <div key={skill} className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 dark:border-slate-700 dark:bg-slate-800">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{skill}</span>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((v) => (
                     <div

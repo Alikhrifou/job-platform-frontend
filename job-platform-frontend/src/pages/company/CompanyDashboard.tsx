@@ -56,8 +56,8 @@ export default function CompanyDashboard() {
       {/* Header */}
       <div className="mb-8">
         <p className="text-sm font-medium text-indigo-600">Company Portal</p>
-        <h1 className="mt-1 text-3xl font-bold text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-slate-500">{email}</p>
+        <h1 className="mt-1 text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">{email}</p>
       </div>
 
       {/* Cards */}
@@ -66,13 +66,13 @@ export default function CompanyDashboard() {
           <Link
             key={card.to + card.title}
             to={card.to}
-            className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60"
+            className="group flex flex-col rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-200/60 dark:hover:shadow-slate-800/60"
           >
             <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${card.gradient} shadow-md`}>
               {card.icon}
             </div>
-            <h3 className="font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">{card.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{card.description}</p>
+            <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-indigo-700 transition-colors">{card.title}</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{card.description}</p>
             <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-indigo-600 opacity-0 transition-opacity group-hover:opacity-100">
               Open <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             </div>

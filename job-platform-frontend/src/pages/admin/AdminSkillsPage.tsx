@@ -53,12 +53,12 @@ export default function AdminSkillsPage() {
     <div>
       <div className="mb-6">
         <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
-        <h1 className="mt-1 text-2xl font-bold text-gray-900">Manage Skills</h1>
+        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Manage Skills</h1>
       </div>
 
       {/* Add / Edit form */}
-      <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-3 font-semibold text-gray-800">{editId ? 'Edit Skill' : 'Add Skill'}</h2>
+      <div className="mb-6 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
+        <h2 className="mb-3 font-semibold text-gray-800 dark:text-slate-100">{editId ? 'Edit Skill' : 'Add Skill'}</h2>
         <div className="grid gap-3 sm:grid-cols-3">
           <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="React" />
           <Input label="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} placeholder="Frontend" />
@@ -72,11 +72,11 @@ export default function AdminSkillsPage() {
 
       {/* Table */}
       {loading ? (
-        <p className="text-sm text-gray-500">Loading…</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">Loading…</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
           <table className="w-full text-left text-sm">
-            <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
+            <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3">ID</th>
                 <th className="px-4 py-3">Name</th>
@@ -87,13 +87,13 @@ export default function AdminSkillsPage() {
             </thead>
             <tbody className="divide-y">
               {skills.map((s) => (
-                <tr key={s.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-xs text-gray-400">{s.id}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{s.name}</td>
+                <tr key={s.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                  <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">{s.id}</td>
+                  <td className="px-4 py-3 font-medium text-gray-800 dark:text-slate-100">{s.name}</td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">{s.category}</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{s.description ?? '—'}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{s.description ?? '—'}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-2">
                       <Button size="sm" variant="ghost" onClick={() => startEdit(s)}>Edit</Button>
@@ -110,9 +110,9 @@ export default function AdminSkillsPage() {
       {/* Delete confirmation modal */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900">Delete Skill</h3>
-            <p className="mt-2 text-sm text-gray-600">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Delete Skill</h3>
+            <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">
               Are you sure you want to delete <strong>{deleteTarget.name}</strong>? This may affect students and jobs using this skill.
             </p>
             <div className="mt-5 flex justify-end gap-3">

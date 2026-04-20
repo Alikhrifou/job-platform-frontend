@@ -5,10 +5,10 @@ import type { JobOfferResponse } from '../../types';
 import Button from '../../components/ui/Button';
 
 const JOB_TYPE_COLORS: Record<string, string> = {
-  INTERNSHIP: 'bg-violet-100 text-violet-700 border-violet-200',
-  JOB: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-  PART_TIME: 'bg-amber-100 text-amber-700 border-amber-200',
-  CONTRACT: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  INTERNSHIP: 'bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-900/40 dark:text-violet-300 dark:border-violet-700',
+  JOB: 'bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/40 dark:text-indigo-300 dark:border-indigo-700',
+  PART_TIME: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700',
+  CONTRACT: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-700',
 };
 
 const JOB_TYPE_LABELS: Record<string, string> = {
@@ -50,8 +50,8 @@ export default function JobsPage() {
     <div>
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Browse Jobs</h1>
-        <p className="mt-1 text-slate-500">Find your next opportunity from top companies</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Browse Jobs</h1>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">Find your next opportunity from top companies</p>
       </div>
 
       {/* Search bar */}
@@ -64,7 +64,7 @@ export default function JobsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search jobs or companies..."
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-800"
           />
         </div>
         <span className="text-sm text-slate-400">
@@ -75,7 +75,7 @@ export default function JobsPage() {
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-52 animate-pulse rounded-2xl bg-slate-200" />
+            <div key={i} className="h-52 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-800" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -91,7 +91,7 @@ export default function JobsPage() {
           {filtered.map((job) => (
             <div
               key={job.id}
-              className="group flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-100/50"
+              className="group flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-100/50 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-indigo-600 dark:hover:shadow-indigo-900/30"
             >
               <div>
                 {/* Job type + active badge */}
@@ -107,10 +107,10 @@ export default function JobsPage() {
                 </div>
 
                 {/* Title + company */}
-                <h2 className="font-bold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors">
+                <h2 className="font-bold text-slate-900 leading-tight group-hover:text-indigo-700 transition-colors dark:text-white dark:group-hover:text-indigo-400">
                   {job.title}
                 </h2>
-                <p className="mt-1 text-sm font-medium text-indigo-600">{job.companyName}</p>
+                <p className="mt-1 text-sm font-medium text-indigo-600 dark:text-indigo-400">{job.companyName}</p>
 
                 {/* Meta */}
                 <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
@@ -135,8 +135,8 @@ export default function JobsPage() {
                 {Object.keys(job.requiredSkills).length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {Object.entries(job.requiredSkills).slice(0, 4).map(([skill, level]) => (
-                      <span key={skill} className="rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
-                        {skill} <span className="text-slate-400">{level}/5</span>
+                      <span key={skill} className="rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                        {skill} <span className="text-slate-400 dark:text-slate-500">{level}/5</span>
                       </span>
                     ))}
                     {Object.keys(job.requiredSkills).length > 4 && (
@@ -148,7 +148,7 @@ export default function JobsPage() {
                 )}
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+              <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
                 <span className="text-xs text-slate-400">{job.applicationsCount} applicants</span>
                 <Link to={`/jobs/${job.id}`}>
                   <Button size="sm">View job →</Button>

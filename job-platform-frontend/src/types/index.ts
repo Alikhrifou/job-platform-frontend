@@ -29,9 +29,12 @@ export interface LoginRequest {
 
 export interface AuthResponse {
   token: string;
+  refreshToken: string;
+  type: string;
+  id: number;
   email: string;
+  fullName: string;
   role: Role;
-  userId: number;
 }
 
 // ─── Skills ──────────────────────────────────────────────────────────────────
@@ -52,7 +55,6 @@ export interface StudentProfileRequest {
   graduationDate?: string;
   bio?: string;
   portfolioUrl?: string;
-  resumeUrl?: string;
   gpa?: number;
   skills?: SkillIdMap;
 }
@@ -68,6 +70,7 @@ export interface StudentProfileResponse {
   bio?: string;
   portfolioUrl?: string;
   resumeUrl?: string;
+  resumeOriginalName?: string;
   gpa?: number;
   skills: SkillMap;
 }
@@ -159,6 +162,7 @@ export interface ApplicationResponse {
   studentBio?: string;
   studentPortfolioUrl?: string;
   studentResumeUrl?: string;
+  studentResumeOriginalName?: string;
   status: ApplicationStatus;
   coverLetter?: string;
   matchScore?: number;

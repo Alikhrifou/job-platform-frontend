@@ -41,7 +41,7 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-[85vh] items-center justify-center py-8">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/60">
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/60 dark:border-slate-700 dark:bg-slate-900 dark:shadow-slate-900/60">
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
@@ -49,22 +49,22 @@ export default function RegisterPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">Create your account</h1>
-            <p className="mt-1.5 text-sm text-slate-500">Join thousands of professionals on JobMatch</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create your account</h1>
+            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">Join thousands of professionals on JobMatch</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             {/* Role selector */}
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-slate-700">I am a</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">I am a</label>
               <div className="grid grid-cols-2 gap-3">
                 {(['STUDENT', 'COMPANY'] as const).map((r) => (
                   <label
                     key={r}
                     className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 p-3.5 transition-all duration-200 ${
                       selectedRole === r
-                        ? 'border-indigo-500 bg-indigo-50 shadow-sm'
-                        : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
+                        ? 'border-indigo-500 bg-indigo-50 shadow-sm dark:bg-indigo-950/40'
+                        : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:border-indigo-400 dark:hover:bg-slate-800'
                     }`}
                   >
                     <input type="radio" value={r} {...register('role')} className="hidden" />
@@ -75,7 +75,7 @@ export default function RegisterPage() {
                     </div>
                     <div>
                       <p className={`text-sm font-semibold ${
-                        selectedRole === r ? 'text-indigo-700' : 'text-slate-700'
+                        selectedRole === r ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-700 dark:text-slate-200'
                       }`}>
                         {r === 'STUDENT' ? 'Student' : 'Company'}
                       </p>
@@ -99,11 +99,11 @@ export default function RegisterPage() {
             <Input label="Phone number" placeholder="+213 0600000000" error={errors.phoneNumber?.message} {...register('phoneNumber')} />
 
             {serverError && (
-              <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+              <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-500/30 dark:bg-red-950/30">
                 <svg className="h-4 w-4 shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
-                <p className="text-sm text-red-600">{serverError}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>
               </div>
             )}
 
@@ -112,9 +112,9 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">
+            <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300">
               Sign in
             </Link>
           </p>

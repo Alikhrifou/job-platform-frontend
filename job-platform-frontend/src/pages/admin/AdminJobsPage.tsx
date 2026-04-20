@@ -29,15 +29,15 @@ export default function AdminJobsPage() {
     <div>
       <div className="mb-6">
         <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; Dashboard</Link>
-        <h1 className="mt-1 text-2xl font-bold text-gray-900">Manage Jobs</h1>
+        <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Manage Jobs</h1>
       </div>
 
       {loading ? (
-        <p className="text-sm text-gray-500">Loading…</p>
+        <p className="text-sm text-gray-500 dark:text-slate-400">Loading…</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
           <table className="w-full text-left text-sm">
-            <thead className="border-b bg-gray-50 text-xs uppercase text-gray-500">
+            <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
                 <th className="px-4 py-3">ID</th>
                 <th className="px-4 py-3">Title</th>
@@ -51,11 +51,11 @@ export default function AdminJobsPage() {
             </thead>
             <tbody className="divide-y">
               {jobs.map((j) => (
-                <tr key={j.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-xs text-gray-400">{j.id}</td>
-                  <td className="px-4 py-3 font-medium text-gray-800">{j.title}</td>
-                  <td className="px-4 py-3 text-gray-600">{j.companyName}</td>
-                  <td className="px-4 py-3 text-gray-600">{j.location}</td>
+                <tr key={j.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                  <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">{j.id}</td>
+                  <td className="px-4 py-3 font-medium text-gray-800 dark:text-slate-100">{j.title}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{j.companyName}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{j.location}</td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
                       {j.jobType ?? '—'}
@@ -66,7 +66,7 @@ export default function AdminJobsPage() {
                       {j.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{j.applicationsCount}</td>
+                  <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{j.applicationsCount}</td>
                   <td className="px-4 py-3 text-right">
                     <Button size="sm" variant="danger" onClick={() => setDeleteTarget(j)}>Delete</Button>
                   </td>
@@ -80,9 +80,9 @@ export default function AdminJobsPage() {
       {/* Delete confirmation modal */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-bold text-gray-900">Delete Job</h3>
-            <p className="mt-2 text-sm text-gray-600">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 p-6 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Delete Job</h3>
+            <p className="mt-2 text-sm text-gray-600 dark:text-slate-300">
               Are you sure you want to delete <strong>{deleteTarget.title}</strong>? All associated applications will also be removed.
             </p>
             <div className="mt-5 flex justify-end gap-3">
