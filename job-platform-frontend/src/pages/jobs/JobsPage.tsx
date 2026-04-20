@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
@@ -18,12 +18,12 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
-  const jobTypeLabels: Record<string, string> = {
+  const jobTypeLabels = useMemo<Record<string, string>>(() => ({
     INTERNSHIP: t('jobs.internship'),
     JOB: t('jobs.fullTime'),
     PART_TIME: t('jobs.partTime'),
     CONTRACT: t('jobs.contract'),
-  };
+  }), [t]);
 
   const fetchJobs = useCallback((query: string) => {
     setLoading(true);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, memo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
@@ -19,6 +19,109 @@ const STATUS_OPTIONS: ApplicationStatus[] = [
   'PENDING', 'SHORTLISTED', 'INTERVIEW_SCHEDULED', 'ACCEPTED', 'OFFER_EXTENDED', 'REJECTED', 'DECLINED',
 ];
 
+const ApplicationRow = memo(function ApplicationRow({
+  app, jobId, onSelect, onUpdateStatus,
+}: {
+  app: ApplicationResponse;
+  jobId?: string;
+  onSelect: (app: ApplicationResponse) => void;
+  onUpdateStatus: (appId: number, status: ApplicationStatus) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
+      <div className="flex items-start justify-between gap-4">
+        {/* Left: student info */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-gray-900 dark:text-white">{app.studentName}</h3>
+            <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100 dark:bg-slate-800'}`}>
+              {app.status.replace(/_/g, ' ')}
+            </span>
+          </div>
+          {app.studentEmail && <p className="text-sm text-gray-500 dark:text-slate-400">{app.studentEmail}</p>}
+          <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
+            {t('student.applied')} {new Date(app.appliedAt).toLocaleDateString()}
+            {!jobId && <> &middot; <span className="font-medium text-gray-600 dark:text-slate-300">{app.jobTitle}</span></>}
+          </p>
+          {app.studentUniversity && (
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+              🎓 {app.studentUniversity}{app.studentMajor && ` · ${app.studentMajor}`}{app.studentGpa ? ` · GPA ${app.studentGpa}` : ''}
+            </p>
+          )}
+          {app.coverLetter && <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 line-clamp-2">{app.coverLetter}</p>}
+        </div>
+
+        {/* Right: score + actions */}
+        <div className="flex flex-col items-end gap-2 shrink-0">
+          {app.matchScore !== undefined && app.matchScore > 0 && (
+            <div className="text-center">
+              <span className={`text-lg font-bold ${app.matchScore >= 70 ? 'text-green-600' : app.matchScore >= 40 ? 'text-yellow-600' : 'text-red-500'}`}>
+                {app.matchScore.toFixed(0)}%
+              </span>
+              <p className="text-[10px] text-gray-400 dark:text-slate-500">{t('student.match')}</p>
+            </div>
+          )}
+          <div className="flex gap-1.5 flex-wrap justify-end">
+            <Button size="sm" variant="secondary" onClick={() => onSelect(app)}>
+              {t('company.viewProfile')}
+            </Button>
+            {app.studentEmail && (
+              <a href={`mailto:${app.studentEmail}`}>
+                <Button size="sm" variant="outline">{t('company.contact')}</Button>
+              </a>
+            )}
+          </div>
+          {app.status === 'PENDING' && (
+            <div className="flex gap-1.5 mt-1">
+              <Button size="sm" variant="ghost" onClick={() => onUpdateStatus(app.id, 'SHORTLISTED')}>
+                {t('company.shortlist')}
+              </Button>
+              <Button size="sm" variant="primary" onClick={() => onUpdateStatus(app.id, 'ACCEPTED')}>
+                {t('company.accept')}
+              </Button>
+              <Button size="sm" variant="danger" onClick={() => onUpdateStatus(app.id, 'REJECTED')}>
+                {t('company.reject')}
+              </Button>
+            </div>
+          )}
+          {app.status === 'SHORTLISTED' && (
+            <div className="flex gap-1.5 mt-1">
+              <Button size="sm" variant="primary" onClick={() => onUpdateStatus(app.id, 'INTERVIEW_SCHEDULED')}>
+                {t('company.scheduleInterview')}
+              </Button>
+              <Button size="sm" variant="danger" onClick={() => onUpdateStatus(app.id, 'REJECTED')}>
+                {t('company.reject')}
+              </Button>
+            </div>
+          )}
+          {app.status === 'INTERVIEW_SCHEDULED' && (
+            <div className="flex gap-1.5 mt-1">
+              <Button size="sm" variant="primary" onClick={() => onUpdateStatus(app.id, 'OFFER_EXTENDED')}>
+                {t('company.extendOffer')}
+              </Button>
+              <Button size="sm" variant="danger" onClick={() => onUpdateStatus(app.id, 'REJECTED')}>
+                {t('company.reject')}
+              </Button>
+            </div>
+          )}
+          {(app.status !== 'PENDING' && app.status !== 'DECLINED') && (
+            <select
+              value={app.status}
+              onChange={(e) => onUpdateStatus(app.id, e.target.value as ApplicationStatus)}
+              className="mt-1 rounded border border-gray-200 dark:border-slate-700 px-2 py-1 text-xs text-gray-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-indigo-400"
+            >
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export default function CompanyApplicationsPage() {
   const { jobId } = useParams();
   const [apps, setApps] = useState<ApplicationResponse[]>([]);
@@ -34,13 +137,15 @@ export default function CompanyApplicationsPage() {
       .finally(() => setLoading(false));
   }, [jobId]);
 
-  const updateStatus = async (appId: number, status: ApplicationStatus) => {
+  const updateStatus = useCallback(async (appId: number, status: ApplicationStatus) => {
     const { data } = await api.patch<ApplicationResponse>(
       `/api/applications/${appId}/status?status=${status}`
     );
     setApps((prev) => prev.map((a) => (a.id === data.id ? data : a)));
-    if (selected?.id === appId) setSelected(data);
-  };
+    setSelected((prev) => (prev?.id === appId ? data : prev));
+  }, []);
+
+  const onSelectApp = useCallback((app: ApplicationResponse) => setSelected(app), []);
 
   const filtered = statusFilter === 'ALL' ? apps : apps.filter((a) => a.status === statusFilter);
 
@@ -91,96 +196,13 @@ export default function CompanyApplicationsPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {filtered.map((app) => (
-            <div key={app.id} className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                {/* Left: student info */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">{app.studentName}</h3>
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100 dark:bg-slate-800'}`}>
-                      {app.status.replace(/_/g, ' ')}
-                    </span>
-                  </div>
-                  {app.studentEmail && <p className="text-sm text-gray-500 dark:text-slate-400">{app.studentEmail}</p>}
-                  <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">
-                    {t('student.applied')} {new Date(app.appliedAt).toLocaleDateString()}
-                    {!jobId && <> &middot; <span className="font-medium text-gray-600 dark:text-slate-300">{app.jobTitle}</span></>}
-                  </p>
-                  {app.studentUniversity && (
-                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-                      🎓 {app.studentUniversity}{app.studentMajor && ` · ${app.studentMajor}`}{app.studentGpa ? ` · GPA ${app.studentGpa}` : ''}
-                    </p>
-                  )}
-                  {app.coverLetter && <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 line-clamp-2">{app.coverLetter}</p>}
-                </div>
-
-                {/* Right: score + actions */}
-                <div className="flex flex-col items-end gap-2 shrink-0">
-                  {app.matchScore !== undefined && app.matchScore > 0 && (
-                    <div className="text-center">
-                      <span className={`text-lg font-bold ${app.matchScore >= 70 ? 'text-green-600' : app.matchScore >= 40 ? 'text-yellow-600' : 'text-red-500'}`}>
-                        {app.matchScore.toFixed(0)}%
-                      </span>
-                      <p className="text-[10px] text-gray-400 dark:text-slate-500">{t('student.match')}</p>
-                    </div>
-                  )}
-                  <div className="flex gap-1.5 flex-wrap justify-end">
-                    <Button size="sm" variant="secondary" onClick={() => setSelected(app)}>
-                      {t('company.viewProfile')}
-                    </Button>
-                    {app.studentEmail && (
-                      <a href={`mailto:${app.studentEmail}`}>
-                        <Button size="sm" variant="outline">{t('company.contact')}</Button>
-                      </a>
-                    )}
-                  </div>
-                  {app.status === 'PENDING' && (
-                    <div className="flex gap-1.5 mt-1">
-                      <Button size="sm" variant="ghost" onClick={() => updateStatus(app.id, 'SHORTLISTED')}>
-                        {t('company.shortlist')}
-                      </Button>
-                      <Button size="sm" variant="primary" onClick={() => updateStatus(app.id, 'ACCEPTED')}>
-                        {t('company.accept')}
-                      </Button>
-                      <Button size="sm" variant="danger" onClick={() => updateStatus(app.id, 'REJECTED')}>
-                        {t('company.reject')}
-                      </Button>
-                    </div>
-                  )}
-                  {app.status === 'SHORTLISTED' && (
-                    <div className="flex gap-1.5 mt-1">
-                      <Button size="sm" variant="primary" onClick={() => updateStatus(app.id, 'INTERVIEW_SCHEDULED')}>
-                        {t('company.scheduleInterview')}
-                      </Button>
-                      <Button size="sm" variant="danger" onClick={() => updateStatus(app.id, 'REJECTED')}>
-                        {t('company.reject')}
-                      </Button>
-                    </div>
-                  )}
-                  {app.status === 'INTERVIEW_SCHEDULED' && (
-                    <div className="flex gap-1.5 mt-1">
-                      <Button size="sm" variant="primary" onClick={() => updateStatus(app.id, 'OFFER_EXTENDED')}>
-                        {t('company.extendOffer')}
-                      </Button>
-                      <Button size="sm" variant="danger" onClick={() => updateStatus(app.id, 'REJECTED')}>
-                        {t('company.reject')}
-                      </Button>
-                    </div>
-                  )}
-                  {(app.status !== 'PENDING' && app.status !== 'DECLINED') && (
-                    <select
-                      value={app.status}
-                      onChange={(e) => updateStatus(app.id, e.target.value as ApplicationStatus)}
-                      className="mt-1 rounded border border-gray-200 dark:border-slate-700 px-2 py-1 text-xs text-gray-600 dark:text-slate-300 outline-none focus:ring-2 focus:ring-indigo-400"
-                    >
-                      {STATUS_OPTIONS.map((s) => (
-                        <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
-                      ))}
-                    </select>
-                  )}
-                </div>
-              </div>
-            </div>
+            <ApplicationRow
+              key={app.id}
+              app={app}
+              jobId={jobId}
+              onSelect={onSelectApp}
+              onUpdateStatus={updateStatus}
+            />
           ))}
         </div>
       )}

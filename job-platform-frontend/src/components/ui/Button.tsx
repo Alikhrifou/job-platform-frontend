@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
@@ -23,7 +25,7 @@ const sizes = {
   lg: 'px-6 py-2.5 text-sm font-semibold',
 };
 
-export default function Button({
+export default memo(function Button({
   loading,
   variant = 'primary',
   size = 'md',
@@ -45,4 +47,4 @@ export default function Button({
       {children}
     </button>
   );
-}
+});

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useAppSelector } from '../../hooks/redux';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,7 @@ export default function StudentDashboard() {
   const { email } = useAppSelector((s) => s.auth);
   const { t } = useTranslation();
 
-  const cards = [
+  const cards = useMemo(() => [
     {
       title: t('student.myProfile'),
       description: t('student.myProfileDesc'),
@@ -40,7 +41,7 @@ export default function StudentDashboard() {
         </svg>
       ),
     },
-  ];
+  ], [t]);
 
   return (
     <div>

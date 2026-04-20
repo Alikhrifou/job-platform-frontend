@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/axios';
@@ -19,9 +19,9 @@ export default function JobDetailPage() {
   const { isAuthenticated, role } = useAppSelector((s) => s.auth);
   const { t } = useTranslation();
 
-  const jobTypeLabels: Record<string, string> = {
+  const jobTypeLabels = useMemo<Record<string, string>>(() => ({
     INTERNSHIP: t('jobs.internship'), JOB: t('jobs.fullTime'), PART_TIME: t('jobs.partTime'), CONTRACT: t('jobs.contract'),
-  };
+  }), [t]);
 
   const [job, setJob] = useState<JobOfferResponse | null>(null);
   const [loading, setLoading] = useState(true);
