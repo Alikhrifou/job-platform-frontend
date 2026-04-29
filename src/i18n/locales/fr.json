@@ -214,7 +214,7 @@
     "skills": "Compétences",
     "manageSkills": "Gérer les compétences",
     "skillsDesc": "Gérer le catalogue de compétences de la plateforme",
-    "createUser": "+ Créer un utilisateur",
+    "createUser": "Créer un utilisateur",
     "createNewUser": "Créer un nouvel utilisateur",
     "name": "Nom",
     "email": "Email",

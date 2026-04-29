@@ -41,19 +41,19 @@ export default function AdminJobsPage() {
           <table className="w-full text-left text-sm">
             <thead className="border-b bg-gray-50 dark:bg-slate-800 text-xs uppercase text-gray-500 dark:text-slate-400">
               <tr>
-                <th className="px-4 py-3">ID</th>
-                <th className="px-4 py-3">{t('admin.title')}</th>
-                <th className="px-4 py-3">{t('admin.company')}</th>
-                <th className="px-4 py-3">{t('company.location')}</th>
-                <th className="px-4 py-3">{t('admin.type')}</th>
-                <th className="px-4 py-3">{t('admin.status')}</th>
-                <th className="px-4 py-3">{t('admin.apps')}</th>
-                <th className="px-4 py-3 text-right">{t('admin.actions')}</th>
+                <th className="px-4 py-3 cursor-pointer">ID</th>
+                <th className="px-4 py-3 cursor-pointer">{t('admin.title')}</th>
+                <th className="px-4 py-3 cursor-pointer">{t('admin.company')}</th>
+                <th className="px-4 py-3 cursor-pointer">{t('company.location')}</th>
+                <th className="px-4 py-3 cursor-pointer">{t('admin.type')}</th>
+                <th className="px-4 py-3 cursor-pointer">{t('admin.status')}</th>
+                <th className="px-4 py-3 cursor-pointer">{t('admin.apps')}</th>
+                <th className="px-4 py-3 cursor-pointer text-right">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y">
               {jobs.map((j) => (
-                <tr key={j.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                <tr key={j.id} className="cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700">
                   <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">{j.id}</td>
                   <td className="px-4 py-3 font-medium text-gray-800 dark:text-slate-100">{j.title}</td>
                   <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{j.companyName}</td>

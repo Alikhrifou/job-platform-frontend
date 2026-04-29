@@ -72,7 +72,7 @@ export default function Navbar() {
           {/* Language toggle */}
           <button
             onClick={toggleLanguage}
-            className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            className="cursor-pointer rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
             aria-label="Toggle language"
           >
             {i18n.language === 'fr' ? 'EN' : 'FR'}
@@ -81,7 +81,7 @@ export default function Navbar() {
           {/* Dark mode toggle */}
           <button
             onClick={toggleTheme}
-            className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            className="cursor-pointer rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
             aria-label="Toggle dark mode"
           >
             {theme === 'dark' ? (

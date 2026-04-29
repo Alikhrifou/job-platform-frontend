@@ -78,7 +78,7 @@ export default function AdminUsersPage() {
           <Link to="/admin" className="text-sm text-indigo-600 hover:underline">&larr; {t('admin.dashboard')}</Link>
           <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{t('admin.manageUsers')}</h1>
         </div>
-        <Button onClick={() => setShowCreate(true)}>+ {t('admin.createUser')}</Button>
+        <Button onClick={() => setShowCreate(true)}>{t('admin.createUser')}</Button>
       </div>
 
       {loading ? (
@@ -98,7 +98,7 @@ export default function AdminUsersPage() {
             </thead>
             <tbody className="divide-y">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                <tr key={u.id} className="cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700">
                   <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">{u.id}</td>
                   <td className="px-4 py-3 font-medium text-gray-800 dark:text-slate-100">{u.firstName} {u.lastName}</td>
                   <td className="px-4 py-3 text-gray-600 dark:text-slate-300">{u.email}</td>

@@ -52,7 +52,7 @@ export default function AdminApplicationsPage() {
             </thead>
             <tbody className="divide-y">
               {apps.map((a) => (
-                <tr key={a.id} className="hover:bg-gray-50 dark:bg-slate-800">
+                <tr key={a.id} className="cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700">
                   <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">{a.id}</td>
                   <td className="px-4 py-3 text-gray-800 dark:text-slate-100">{a.studentName ?? `Student #${a.studentId}`}</td>
                   <td className="px-4 py-3 font-medium text-gray-800 dark:text-slate-100">{a.jobTitle}</td>

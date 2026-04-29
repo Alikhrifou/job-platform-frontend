@@ -59,7 +59,7 @@ export default function CompanyJobsPage() {
 
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('company.myJobOffers')}</h1>
-        <Link to="/company/jobs/new"><Button>+ {t('company.postJob')}</Button></Link>
+        <Link to="/company/jobs/new"><Button>{t('company.postJob')}</Button></Link>
       </div>
 
       {jobs.length === 0 ? (
