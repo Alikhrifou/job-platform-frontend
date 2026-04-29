@@ -46,7 +46,7 @@ const ApplicationRow = memo(function ApplicationRow({
           </p>
           {app.studentUniversity && (
             <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
-              🎓 {app.studentUniversity}{app.studentMajor && ` · ${app.studentMajor}`}{app.studentGpa ? ` · GPA ${app.studentGpa}` : ''}
+              🎓 {app.studentUniversity}{app.studentMajor && ` · ${app.studentMajor}`}
             </p>
           )}
           {app.coverLetter && <p className="mt-2 text-sm text-gray-600 dark:text-slate-300 line-clamp-2">{app.coverLetter}</p>}
@@ -128,6 +128,11 @@ export default function CompanyApplicationsPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<ApplicationResponse | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [notes, setNotes] = useState('');
+  const [savingNotes, setSavingNotes] = useState(false);
+  const [interviewDate, setInterviewDate] = useState('');
+  const [interviewLink, setInterviewLink] = useState('');
+  const [schedulingInterview, setSchedulingInterview] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -145,7 +150,39 @@ export default function CompanyApplicationsPage() {
     setSelected((prev) => (prev?.id === appId ? data : prev));
   }, []);
 
-  const onSelectApp = useCallback((app: ApplicationResponse) => setSelected(app), []);
+  const onSelectApp = useCallback((app: ApplicationResponse) => {
+    setSelected(app);
+    setNotes(app.reviewNotes ?? '');
+    setInterviewDate(app.interviewDate ? new Date(app.interviewDate).toISOString().slice(0, 16) : '');
+    setInterviewLink(app.interviewLink ?? '');
+  }, []);
+
+  const saveNotes = async () => {
+    if (!selected) return;
+    setSavingNotes(true);
+    try {
+      const { data } = await api.patch<ApplicationResponse>(`/api/applications/${selected.id}/notes`, { notes });
+      setApps((prev) => prev.map((a) => (a.id === data.id ? data : a)));
+      setSelected(data);
+    } finally {
+      setSavingNotes(false);
+    }
+  };
+
+  const saveInterview = async () => {
+    if (!selected || !interviewDate) return;
+    setSchedulingInterview(true);
+    try {
+      const { data } = await api.patch<ApplicationResponse>(`/api/applications/${selected.id}/interview`, {
+        interviewDate: new Date(interviewDate).toISOString(),
+        interviewLink: interviewLink || null,
+      });
+      setApps((prev) => prev.map((a) => (a.id === data.id ? data : a)));
+      setSelected(data);
+    } finally {
+      setSchedulingInterview(false);
+    }
+  };
 
   const filtered = statusFilter === 'ALL' ? apps : apps.filter((a) => a.status === statusFilter);
 
@@ -236,9 +273,6 @@ export default function CompanyApplicationsPage() {
                 {selected.studentMajor && (
                   <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.major')}</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentMajor}</p></div>
                 )}
-                {selected.studentGpa !== undefined && selected.studentGpa > 0 && (
-                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.gpa')}</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentGpa}</p></div>
-                )}
                 {selected.matchScore !== undefined && selected.matchScore > 0 && (
                   <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.matchScore')}</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
                 )}
@@ -309,6 +343,50 @@ export default function CompanyApplicationsPage() {
                     <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
                   ))}
                 </select>
+              </div>
+            </section>
+
+            {/* Review Notes */}
+            <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.reviewNotes')}</h4>
+              <textarea
+                rows={3}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={t('company.reviewNotesPlaceholder')}
+                className="w-full rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-800 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-300"
+              />
+              <div className="mt-2 flex justify-end">
+                <Button size="sm" variant="secondary" onClick={saveNotes} loading={savingNotes}>{t('common.save')}</Button>
+              </div>
+            </section>
+
+            {/* Interview Scheduling */}
+            <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.scheduleInterviewLabel')}</h4>
+              {selected.interviewDate && (
+                <p className="mb-2 text-xs text-indigo-600 dark:text-indigo-400">
+                  📅 {new Date(selected.interviewDate).toLocaleString()}
+                  {selected.interviewLink && <> · <a href={selected.interviewLink} target="_blank" rel="noopener noreferrer" className="underline">{t('company.joinLink')}</a></>}
+                </p>
+              )}
+              <div className="flex flex-col gap-2">
+                <input
+                  type="datetime-local"
+                  value={interviewDate}
+                  onChange={(e) => setInterviewDate(e.target.value)}
+                  className="rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-300"
+                />
+                <input
+                  type="url"
+                  value={interviewLink}
+                  onChange={(e) => setInterviewLink(e.target.value)}
+                  placeholder="https://meet.google.com/..."
+                  className="rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-800 dark:text-slate-100 placeholder:text-gray-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-300"
+                />
+                <div className="flex justify-end">
+                  <Button size="sm" onClick={saveInterview} loading={schedulingInterview} disabled={!interviewDate}>{t('company.scheduleInterview')}</Button>
+                </div>
               </div>
             </section>
 

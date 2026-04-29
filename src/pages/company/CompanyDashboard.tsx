@@ -10,7 +10,7 @@ export default function CompanyDashboard() {
   const cards = useMemo(() => [
     {
       title: t('company.companyProfile'),
-      description: t('company.companyProfileDesc'),
+      description: t('company.updateCompanyInfo'),
       to: '/company/profile',
       gradient: 'from-indigo-500 to-violet-500',
       icon: (
@@ -21,7 +21,7 @@ export default function CompanyDashboard() {
     },
     {
       title: t('company.postJob'),
-      description: t('company.postJobDesc'),
+      description: t('company.createJobListing'),
       to: '/company/jobs/new',
       gradient: 'from-blue-500 to-cyan-500',
       icon: (
@@ -32,7 +32,7 @@ export default function CompanyDashboard() {
     },
     {
       title: t('company.myJobOffers'),
-      description: t('company.myJobOffersDesc'),
+      description: t('company.manageJobPostings'),
       to: '/company/jobs',
       gradient: 'from-amber-500 to-orange-500',
       icon: (
@@ -43,7 +43,7 @@ export default function CompanyDashboard() {
     },
     {
       title: t('company.applications'),
-      description: t('company.applicationsDesc'),
+      description: t('company.reviewCandidates'),
       to: '/company/applications',
       gradient: 'from-emerald-500 to-teal-500',
       icon: (

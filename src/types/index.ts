@@ -55,7 +55,6 @@ export interface StudentProfileRequest {
   graduationDate?: string;
   bio?: string;
   portfolioUrl?: string;
-  gpa?: number;
   skills?: SkillIdMap;
 }
 
@@ -71,7 +70,6 @@ export interface StudentProfileResponse {
   portfolioUrl?: string;
   resumeUrl?: string;
   resumeOriginalName?: string;
-  gpa?: number;
   skills: SkillMap;
 }
 
@@ -158,7 +156,6 @@ export interface ApplicationResponse {
   studentEmail?: string;
   studentUniversity?: string;
   studentMajor?: string;
-  studentGpa?: number;
   studentBio?: string;
   studentPortfolioUrl?: string;
   studentResumeUrl?: string;
@@ -169,4 +166,6 @@ export interface ApplicationResponse {
   appliedAt: string;
   reviewedAt?: string;
   reviewNotes?: string;
+  interviewDate?: string;
+  interviewLink?: string;
 }

@@ -10,7 +10,7 @@ export default function StudentDashboard() {
   const cards = useMemo(() => [
     {
       title: t('student.myProfile'),
-      description: t('student.myProfileDesc'),
+      description: t('student.updateSkills'),
       to: '/student/profile',
       gradient: 'from-indigo-500 to-violet-500',
       icon: (
@@ -21,7 +21,7 @@ export default function StudentDashboard() {
     },
     {
       title: t('student.browseJobs'),
-      description: t('student.browseJobsDesc'),
+      description: t('student.discoverOpportunities'),
       to: '/jobs',
       gradient: 'from-blue-500 to-cyan-500',
       icon: (
@@ -32,7 +32,7 @@ export default function StudentDashboard() {
     },
     {
       title: t('student.myApplications'),
-      description: t('student.myApplicationsDesc'),
+      description: t('student.trackApplications'),
       to: '/student/applications',
       gradient: 'from-emerald-500 to-teal-500',
       icon: (

@@ -42,20 +42,36 @@ export default function StudentApplicationsPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {apps.map((app) => (
-            <div key={app.id} className="flex items-center justify-between rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white">{app.jobTitle}</h3>
-                <p className="text-sm text-blue-600">{app.companyName}</p>
-                <p className="mt-1 text-xs text-gray-400 dark:text-slate-500">{t('student.applied')} {new Date(app.appliedAt).toLocaleDateString()}</p>
+            <div key={app.id} className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{app.jobTitle}</h3>
+                  <p className="text-sm text-blue-600">{app.companyName}</p>
+                  <p className="mt-1 text-xs text-gray-400 dark:text-slate-500">{t('student.applied')} {new Date(app.appliedAt).toLocaleDateString()}</p>
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  <span className={`rounded-full px-3 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300'}`}>
+                    {app.status.replace('_', ' ')}
+                  </span>
+                  {app.matchScore !== undefined && (
+                    <span className="text-xs text-gray-500 dark:text-slate-400">{t('student.match')}: {app.matchScore.toFixed(0)}%</span>
+                  )}
+                </div>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                <span className={`rounded-full px-3 py-0.5 text-xs font-medium ${STATUS_STYLES[app.status] ?? 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300'}`}>
-                  {app.status.replace('_', ' ')}
-                </span>
-                {app.matchScore !== undefined && (
-                  <span className="text-xs text-gray-500 dark:text-slate-400">{t('student.match')}: {app.matchScore.toFixed(0)}%</span>
-                )}
-              </div>
+              {app.status === 'INTERVIEW_SCHEDULED' && (app.interviewDate || app.interviewLink) && (
+                <div className="mt-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 px-4 py-3 flex flex-col gap-1">
+                  <p className="text-xs font-semibold text-purple-700 dark:text-purple-300">🗓 {t('student.interviewScheduled')}</p>
+                  {app.interviewDate && (
+                    <p className="text-sm text-gray-700 dark:text-slate-300">{new Date(app.interviewDate).toLocaleString()}</p>
+                  )}
+                  {app.interviewLink && (
+                    <a href={app.interviewLink} target="_blank" rel="noreferrer"
+                      className="text-sm text-blue-600 dark:text-blue-400 underline break-all">
+                      {t('student.joinInterview')}
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -63,3 +79,6 @@ export default function StudentApplicationsPage() {
     </div>
   );
 }
+
+
+

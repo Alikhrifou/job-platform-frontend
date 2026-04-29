@@ -13,8 +13,15 @@ const schema = yup.object({
   major: yup.string(),
   bio: yup.string(),
   portfolioUrl: yup.string().url('Must be a valid URL').nullable(),
-  gpa: yup.number().min(0).max(4).nullable(),
 });
+
+const allowedResumeMimeTypes = new Set([
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+]);
+
+const allowedResumeExtensions = new Set(['pdf', 'doc', 'docx']);
 
 export default function StudentProfilePage() {
   const { t } = useTranslation();
@@ -22,6 +29,7 @@ export default function StudentProfilePage() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<Record<number, number>>({});
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const [resumeFile, setResumeFile] = useState<string | null>(null);
   const [resumeName, setResumeName] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -48,7 +56,6 @@ export default function StudentProfilePage() {
           university: profileRes.data.university,
           major: profileRes.data.major,
           bio: profileRes.data.bio,
-          gpa: profileRes.data.gpa,
           portfolioUrl: profileRes.data.portfolioUrl,
         });
         const map: Record<number, number> = {};
@@ -74,9 +81,12 @@ export default function StudentProfilePage() {
     if (!file) return;
     setUploadError('');
 
-    const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowed.includes(file.type)) {
-      setUploadError('Only PDF and DOCX files are allowed');
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    const hasAllowedMimeType = !file.type || allowedResumeMimeTypes.has(file.type);
+    const hasAllowedExtension = !!extension && allowedResumeExtensions.has(extension);
+
+    if (!hasAllowedMimeType || !hasAllowedExtension) {
+      setUploadError('Only PDF, DOC, and DOCX files are allowed');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -88,9 +98,7 @@ export default function StudentProfilePage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await api.post<{ resumeUrl: string; resumeOriginalName: string }>('/api/students/profile/resume', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const res = await api.post<{ resumeUrl: string; resumeOriginalName: string }>('/api/students/profile/resume', formData);
       setResumeFile(res.data.resumeUrl);
       setResumeName(res.data.resumeOriginalName);
     } catch (err: any) {
@@ -118,15 +126,34 @@ export default function StudentProfilePage() {
       const blob = new Blob([res.data], { type: res.headers['content-type'] });
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
     } catch {
       setUploadError('Failed to open resume');
     }
   };
 
   const onSubmit = async (data: StudentProfileRequest) => {
-    await api.post('/api/students/profile', { ...data, skills: selectedSkills });
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSaveError('');
+
+    const normalizeOptionalText = (value?: string) => {
+      const trimmed = value?.trim();
+      return trimmed ? trimmed : null;
+    };
+
+    try {
+      await api.post('/api/students/profile', {
+        ...data,
+        university: normalizeOptionalText(data.university),
+        major: normalizeOptionalText(data.major),
+        bio: normalizeOptionalText(data.bio),
+        portfolioUrl: normalizeOptionalText(data.portfolioUrl),
+        skills: selectedSkills,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      setSaveError(err.response?.data?.message || 'Failed to save profile');
+    }
   };
   return (
     <div className="mx-auto max-w-2xl">
@@ -139,7 +166,6 @@ export default function StudentProfilePage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label={t('student.university')} placeholder="MIT" error={errors.university?.message} {...register('university')} />
             <Input label={t('student.major')} placeholder="Computer Science" error={errors.major?.message} {...register('major')} />
-            <Input label={t('student.gpa')} type="number" step="0.01" placeholder="3.8" error={errors.gpa?.message} {...register('gpa')} />
           </div>
         </section>
 
@@ -228,6 +254,7 @@ export default function StudentProfilePage() {
           <Button type="submit" loading={isSubmitting} size="lg">{t('student.saveProfile')}</Button>
           {saved && <span className="text-sm text-green-600">✓ {t('student.savedSuccessfully')}</span>}
         </div>
+        {saveError && <p className="text-sm text-red-500">{saveError}</p>}
       </form>
     </div>
   );
