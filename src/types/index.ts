@@ -168,4 +168,7 @@ export interface ApplicationResponse {
   reviewNotes?: string;
   interviewDate?: string;
   interviewLink?: string;
+  interviewConfirmed?: boolean;
+  rescheduleRequested?: boolean;
+  rescheduleNote?: string;
 }

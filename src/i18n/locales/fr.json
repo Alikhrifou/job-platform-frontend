@@ -20,6 +20,7 @@
   "nav": {
     "jobs": "Offres",
     "dashboard": "Tableau de bord",
+    "myApplications": "Mes candidatures",
     "signOut": "Déconnexion",
     "signIn": "Connexion",
     "getStarted": "Commencer"
@@ -90,7 +91,14 @@
     "applied": "Postulé le",
     "match": "Correspondance",
     "interviewScheduled": "Entretien planifié",
-    "joinInterview": "Rejoindre l'entretien"
+    "interviewDetailsComingSoon": "Les détails de l'entretien seront partagés bientôt.",
+    "interviewConfirmed": "Vous avez confirmé cet entretien",
+    "rescheduleRequested": "Report demandé — en attente de réponse",
+    "joinInterview": "Rejoindre l'entretien",
+    "acceptInterview": "Accepter",
+    "requestReschedule": "Demander un autre créneau",
+    "rescheduleNotePlaceholder": "Expliquez pourquoi vous souhaitez un autre créneau...",
+    "sendRescheduleRequest": "Envoyer la demande"
   },
   "jobs": {
     "browseJobs": "Parcourir les offres",
@@ -172,6 +180,8 @@
     "reviewNotes": "Notes de revue",
     "reviewNotesPlaceholder": "Ajoutez des notes privées sur ce candidat...",
     "joinLink": "Lien de connexion",
+    "rescheduleRequestedByStudent": "L'étudiant a demandé un autre créneau",
+    "studentConfirmedInterview": "L'étudiant a confirmé cet entretien",
     "coverLetter": "Lettre de motivation",
     "extendOffer": "Proposer une offre",
     "studentProfile": "Profil Étudiant",

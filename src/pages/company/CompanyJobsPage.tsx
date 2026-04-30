@@ -31,7 +31,7 @@ export default function CompanyJobsPage() {
   const { t } = useTranslation();
 
   const load = () => {
-    api.get<JobOfferResponse[]>('/api/jobs')
+    api.get<JobOfferResponse[]>('/api/jobs/my-jobs')
       .then((r) => setJobs(r.data))
       .finally(() => setLoading(false));
   };

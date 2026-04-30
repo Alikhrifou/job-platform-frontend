@@ -37,6 +37,15 @@ export default function JobDetailPage() {
       .finally(() => setLoading(false));
   }, [jobId]);
 
+  // Check if the student already applied to this job
+  useEffect(() => {
+    if (role === 'STUDENT' && jobId) {
+      api.get<boolean>(`/api/applications/check/${jobId}`)
+        .then((r) => { if (r.data) setApplied(true); })
+        .catch(() => {}); // silently ignore — not critical
+    }
+  }, [jobId, role]);
+
   const handleApply = async () => {
     if (!isAuthenticated) { navigate('/login'); return; }
     try {
@@ -46,7 +55,8 @@ export default function JobDetailPage() {
       setApplied(true);
       setShowForm(false);
     } catch (err: any) {
-      setError(err.response?.data?.message || t('jobs.failedToApply'));
+      const msg = err.response?.data?.message;
+      setError(msg || t('jobs.failedToApply'));
     } finally {
       setApplying(false);
     }

@@ -174,7 +174,7 @@ export default function CompanyApplicationsPage() {
     setSchedulingInterview(true);
     try {
       const { data } = await api.patch<ApplicationResponse>(`/api/applications/${selected.id}/interview`, {
-        interviewDate: new Date(interviewDate).toISOString(),
+        interviewDate: new Date(interviewDate).toISOString().slice(0, 19), // strip timezone → LocalDateTime compatible
         interviewLink: interviewLink || null,
       });
       setApps((prev) => prev.map((a) => (a.id === data.id ? data : a)));
@@ -364,6 +364,17 @@ export default function CompanyApplicationsPage() {
             {/* Interview Scheduling */}
             <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
               <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.scheduleInterviewLabel')}</h4>
+              {selected.rescheduleRequested && (
+                <div className="mb-3 rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 px-3 py-2">
+                  <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">⚠️ {t('company.rescheduleRequestedByStudent')}</p>
+                  {selected.rescheduleNote && (
+                    <p className="mt-0.5 text-xs text-gray-700 dark:text-slate-300">"{selected.rescheduleNote}"</p>
+                  )}
+                </div>
+              )}
+              {selected.interviewConfirmed && (
+                <p className="mb-2 text-xs font-semibold text-green-700 dark:text-green-400">✅ {t('company.studentConfirmedInterview')}</p>
+              )}
               {selected.interviewDate && (
                 <p className="mb-2 text-xs text-indigo-600 dark:text-indigo-400">
                   📅 {new Date(selected.interviewDate).toLocaleString()}

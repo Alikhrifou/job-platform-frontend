@@ -20,6 +20,7 @@
   "nav": {
     "jobs": "Jobs",
     "dashboard": "Dashboard",
+    "myApplications": "My Applications",
     "signOut": "Sign out",
     "signIn": "Sign in",
     "getStarted": "Get started"
@@ -90,7 +91,14 @@
     "applied": "Applied",
     "match": "Match",
     "interviewScheduled": "Interview Scheduled",
-    "joinInterview": "Join Interview"
+    "interviewDetailsComingSoon": "Interview details will be shared soon.",
+    "interviewConfirmed": "You confirmed this interview",
+    "rescheduleRequested": "Reschedule requested — waiting for company response",
+    "joinInterview": "Join Interview",
+    "acceptInterview": "Accept",
+    "requestReschedule": "Request another time",
+    "rescheduleNotePlaceholder": "Explain why you need another time...",
+    "sendRescheduleRequest": "Send request"
   },
   "jobs": {
     "browseJobs": "Browse Jobs",
@@ -172,6 +180,8 @@
     "reviewNotes": "Review Notes",
     "reviewNotesPlaceholder": "Add private notes about this candidate...",
     "joinLink": "Join Link",
+    "rescheduleRequestedByStudent": "Student requested a new time slot",
+    "studentConfirmedInterview": "Student confirmed this interview",
     "coverLetter": "Cover Letter",
     "extendOffer": "Extend Offer",
     "studentProfile": "Student Profile",
