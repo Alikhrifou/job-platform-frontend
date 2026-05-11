@@ -104,6 +104,7 @@
     "browseJobs": "Browse Jobs",
     "findOpportunity": "Find your next opportunity from top companies",
     "searchPlaceholder": "Search jobs or companies...",
+    "cityPlaceholder": "Filter by city...",
     "jobsFound": "{{count}} job found",
     "jobsFound_other": "{{count}} jobs found",
     "noJobsFound": "No jobs found",

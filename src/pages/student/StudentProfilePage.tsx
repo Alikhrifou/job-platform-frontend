@@ -252,7 +252,7 @@ export default function StudentProfilePage() {
 
         <div className="flex items-center gap-3">
           <Button type="submit" loading={isSubmitting} size="lg">{t('student.saveProfile')}</Button>
-          {saved && <span className="text-sm text-green-600">✓ {t('student.savedSuccessfully')}</span>}
+          {saved && <span className="text-sm text-green-600">{t('student.savedSuccess')}</span>}
         </div>
         {saveError && <p className="text-sm text-red-500">{saveError}</p>}
       </form>

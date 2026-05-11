@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const cards = useMemo(() => [
     {
       title: t('admin.users'),
-      description: t('admin.usersDesc'),
+      description: t('admin.manageUsersDesc'),
       to: '/admin/users',
       gradient: 'from-indigo-500 to-violet-500',
       icon: (
@@ -21,7 +21,7 @@ export default function AdminDashboard() {
     },
     {
       title: t('admin.jobs'),
-      description: t('admin.jobsDesc'),
+      description: t('admin.manageJobsDesc'),
       to: '/admin/jobs',
       gradient: 'from-blue-500 to-cyan-500',
       icon: (
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
             <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-indigo-700 transition-colors">{card.title}</h3>
             <p className="mt-1.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{card.description}</p>
             <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-indigo-600 opacity-0 transition-opacity group-hover:opacity-100">
-              {t('admin.manage')} <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              {t('common.manage')} <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             </div>
           </Link>
         ))}

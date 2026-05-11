@@ -80,7 +80,7 @@ export default function JobFormPage() {
           <div className="flex flex-col gap-4">
             <Input label={t('company.jobTitle')} placeholder="Frontend Developer" error={errors.title?.message} {...register('title')} />
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input label={t('company.locationLabel')} placeholder="Paris, France" error={errors.location?.message} {...register('location')} />
+              <Input label={t('company.location')} placeholder="Paris, France" error={errors.location?.message} {...register('location')} />
               <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('company.jobType')}</label>
                 <select {...register('jobType')} className="rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500">
@@ -93,7 +93,7 @@ export default function JobFormPage() {
             </div>
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-gray-700 dark:text-slate-200">{t('company.description')}</label>
-              <textarea {...register('description')} rows={5} placeholder={t('company.jobDescPlaceholder')} className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+              <textarea {...register('description')} rows={5} placeholder={t('company.jobDescriptionPlaceholder')} className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-slate-200">
               <input type="checkbox" {...register('isActive')} className="accent-blue-600" />

@@ -104,6 +104,7 @@
     "browseJobs": "Parcourir les offres",
     "findOpportunity": "Trouvez votre prochaine opportunité auprès des meilleures entreprises",
     "searchPlaceholder": "Rechercher des offres ou des entreprises...",
+    "cityPlaceholder": "Filtrer par ville...",
     "jobsFound": "{{count}} offre trouvée",
     "jobsFound_other": "{{count}} offres trouvées",
     "noJobsFound": "Aucune offre trouvée",

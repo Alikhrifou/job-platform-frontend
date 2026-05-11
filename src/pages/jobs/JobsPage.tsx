@@ -15,6 +15,7 @@ const JOB_TYPE_COLORS: Record<string, string> = {
 export default function JobsPage() {
   const [jobs, setJobs] = useState<JobOfferResponse[]>([]);
   const [search, setSearch] = useState('');
+  const [city, setCity] = useState('');
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
@@ -25,11 +26,17 @@ export default function JobsPage() {
     CONTRACT: t('jobs.contract'),
   }), [t]);
 
-  const fetchJobs = useCallback((query: string) => {
+  const fetchJobs = useCallback((query: string, cityQuery: string) => {
     setLoading(true);
-    const url = query.trim()
-      ? `/api/jobs/search?title=${encodeURIComponent(query.trim())}`
-      : '/api/jobs';
+    const hasQuery = query.trim();
+    const hasCity  = cityQuery.trim();
+    let url = '/api/jobs';
+    if (hasQuery || hasCity) {
+      const params = new URLSearchParams();
+      if (hasQuery) params.set('title', query.trim());
+      if (hasCity)  params.set('city',  cityQuery.trim());
+      url = `/api/jobs/search?${params.toString()}`;
+    }
     api.get<JobOfferResponse[]>(url)
       .then((r) => setJobs(r.data))
       .finally(() => setLoading(false));
@@ -37,14 +44,14 @@ export default function JobsPage() {
 
   // Initial load
   useEffect(() => {
-    fetchJobs('');
+    fetchJobs('', '');
   }, [fetchJobs]);
 
   // Debounced search
   useEffect(() => {
-    const timer = setTimeout(() => fetchJobs(search), 400);
+    const timer = setTimeout(() => fetchJobs(search, city), 400);
     return () => clearTimeout(timer);
-  }, [search, fetchJobs]);
+  }, [search, city, fetchJobs]);
 
   const filtered = jobs;
 
@@ -58,16 +65,30 @@ export default function JobsPage() {
 
       {/* Search bar */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:w-80">
-          <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={t('jobs.searchPlaceholder')}
-            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-800"
-          />
+        <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="relative w-full sm:w-72">
+            <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t('jobs.searchPlaceholder')}
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-800"
+            />
+          </div>
+          <div className="relative w-full sm:w-52">
+            <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder={t('jobs.cityPlaceholder')}
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-800"
+            />
+          </div>
         </div>
         <span className="text-sm text-slate-400">
           {filtered.length} {filtered.length === 1 ? t('jobs.jobSingular') : t('jobs.jobPlural')} {t('jobs.found')}
@@ -153,7 +174,7 @@ export default function JobsPage() {
               <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
                 <span className="text-xs text-slate-400">{job.applicationsCount} {t('jobs.applicants')}</span>
                 <Link to={`/jobs/${job.id}`}>
-                  <Button size="sm">{t('jobs.viewJob')} →</Button>
+                  <Button size="sm">{t('jobs.viewJob')}</Button>
                 </Link>
               </div>
             </div>

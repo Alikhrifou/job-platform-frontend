@@ -76,7 +76,7 @@ export default function CompanyProfilePage() {
 
         <div className="flex items-center gap-3">
           <Button type="submit" loading={isSubmitting} size="lg">{t('company.saveProfile')}</Button>
-          {saved && <span className="text-sm text-green-600">✓ {t('common.savedSuccessfully')}</span>}
+          {saved && <span className="text-sm text-green-600">{t('company.savedSuccess')}</span>}
         </div>
       </form>
     </div>

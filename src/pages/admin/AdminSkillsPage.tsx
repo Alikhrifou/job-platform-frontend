@@ -67,7 +67,7 @@ export default function AdminSkillsPage() {
           <Input label={t('admin.descriptionLabel')} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={t('admin.optional')} />
         </div>
         <div className="mt-4 flex gap-2">
-          <Button size="sm" onClick={handleSave}>{editId ? t('admin.update') : t('admin.create')}</Button>
+          <Button size="sm" onClick={handleSave}>{editId ? t('common.update') : t('common.create')}</Button>
           {editId && <Button size="sm" variant="ghost" onClick={() => { setForm(empty); setEditId(null); }}>{t('common.cancel')}</Button>}
         </div>
       </div>

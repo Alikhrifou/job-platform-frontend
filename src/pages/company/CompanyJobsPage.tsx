@@ -75,10 +75,10 @@ export default function CompanyJobsPage() {
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-gray-900 dark:text-white">{job.title}</h3>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${job.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-400'}`}>
-                    {job.isActive ? t('company.active') : t('company.inactive')}
+                    {job.isActive ? t('common.active') : t('common.inactive')}
                   </span>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-slate-400">📍 {job.location} · {job.applicationsCount} {t('company.applicants')}</p>
+                <p className="text-sm text-gray-500 dark:text-slate-400">📍 {job.location} · {job.applicationsCount} {t('jobs.applicants')}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Link to={`/company/applications/${job.id}`}><Button size="sm" variant="secondary">{t('company.applications')}</Button></Link>

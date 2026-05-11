@@ -54,7 +54,7 @@ const ApplicationRow = memo(function ApplicationRow({
 
         {/* Right: score + actions */}
         <div className="flex flex-col items-end gap-2 shrink-0">
-          {app.matchScore !== undefined && app.matchScore > 0 && (
+          {app.matchScore !== undefined && (
             <div className="text-center">
               <span className={`text-lg font-bold ${app.matchScore >= 70 ? 'text-green-600' : app.matchScore >= 40 ? 'text-yellow-600' : 'text-red-500'}`}>
                 {app.matchScore.toFixed(0)}%
@@ -197,7 +197,7 @@ export default function CompanyApplicationsPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <Link to="/company/jobs" className="text-sm text-indigo-600 hover:underline">&larr; {t('company.myJobs')}</Link>
+        <Link to="/company/jobs" className="text-sm text-indigo-600 hover:underline">{t('company.myJobs')}</Link>
         <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
           {jobId ? t('company.jobApplications') : t('company.allApplications')}
         </h1>
@@ -274,7 +274,7 @@ export default function CompanyApplicationsPage() {
                   <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.major')}</p><p className="font-medium text-gray-800 dark:text-slate-100">{selected.studentMajor}</p></div>
                 )}
                 {selected.matchScore !== undefined && selected.matchScore > 0 && (
-                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('student.matchScore')}</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
+                  <div><p className="text-gray-400 dark:text-slate-500 text-xs">{t('company.matchScore')}</p><p className="font-bold text-indigo-600">{selected.matchScore.toFixed(0)}%</p></div>
                 )}
               </div>
             </section>
@@ -329,7 +329,7 @@ export default function CompanyApplicationsPage() {
 
             {/* Application status */}
             <section className="mb-5 rounded-xl border border-gray-200 dark:border-slate-700 p-4">
-              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.applicationFor')} {selected.jobTitle}</h4>
+              <h4 className="text-xs font-semibold uppercase text-gray-400 dark:text-slate-500 mb-2">{t('company.applicationFor', { job: selected.jobTitle })}</h4>
               <div className="flex items-center gap-3">
                 <span className={`rounded-full px-3 py-0.5 text-xs font-medium ${STATUS_STYLES[selected.status]}`}>
                   {selected.status.replace(/_/g, ' ')}
@@ -406,7 +406,7 @@ export default function CompanyApplicationsPage() {
               {selected.studentEmail && (
                 <a href={`mailto:${selected.studentEmail}`} className="flex-1">
                   <Button className="w-full" variant="primary">
-                    ✉ {t('company.contactStudent')}
+                    {t('company.contactStudent')}
                   </Button>
                 </a>
               )}
